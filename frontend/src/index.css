@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.glass-dark {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* --- THEME STYLING --- */
+
+/* 1. MINIMAL THEME (Light Mode Clean Setup) */
+.theme-minimal {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #0f172a;
+}
+.theme-minimal .profile-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+.theme-minimal .profile-button {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.2s ease-in-out;
+}
+.theme-minimal .profile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. DARK THEME (Premium Charcoal/Glassmorphism) */
+.theme-dark {
+  background: linear-gradient(135deg, #090d16 0%, #111827 100%);
+  color: #f3f4f6;
+}
+.theme-dark .profile-card {
+  background: rgba(31, 41, 55, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+.theme-dark .profile-button {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.theme-dark .profile-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* 3. NEON THEME (Cyberpunk Deep Purple & Glowing Edges) */
+.theme-neon {
+  background: radial-gradient(circle at top, #1e0b36 0%, #080312 100%);
+  color: #fdf2ff;
+}
+.theme-neon .profile-card {
+  background: rgba(18, 9, 36, 0.8);
+  border: 1px solid #d946ef;
+  box-shadow: 0 0 15px rgba(217, 70, 239, 0.15);
+}
+.theme-neon .profile-button {
+  background: rgba(0, 0, 0, 0.4);
+  color: #38bdf8; /* Cyan default text */
+  border: 1.5px solid #d946ef; /* Magenta default border */
+  box-shadow: 0 0 8px rgba(217, 70, 239, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.theme-neon .profile-button:hover {
+  color: #ffffff;
+  background: #d946ef;
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(217, 70, 239, 0.6), 0 0 40px rgba(56, 189, 248, 0.2);
+  transform: translateY(-3px) scale(1.02);
+}

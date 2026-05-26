@@ -1,0 +1,271 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import API from '../services/api';
+import Navbar from '../components/Navbar';
+import DashboardEditor from '../components/DashboardEditor';
+import LivePreview from '../components/LivePreview';
+import { LayoutDashboard, Eye, MessageSquare, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const Dashboard = () => {
+  const { user, updateProfile } = useAuth();
+  const [links, setLinks] = useState([]);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    username: '',
+    bio: '',
+    avatar: '',
+    accentColor: '#6366f1',
+    selectedTheme: 'minimal',
+  });
+  const [loading, setLoading] = useState(true);
+  const [isProfileSaving, setIsProfileSaving] = useState(false);
+  const [isProfileSaved, setIsProfileSaved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [mobileView, setMobileView] = useState('edit'); // 'edit' or 'preview'
+
+  // Initialize local profile state once user is fetched from AuthContext
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        username: user.username || '',
+        bio: user.bio || '',
+        avatar: user.avatar || '',
+        accentColor: user.accentColor || '#6366f1',
+        selectedTheme: user.selectedTheme || 'minimal',
+      });
+    }
+  }, [user]);
+
+  // Fetch link records on load
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const response = await API.get('/links');
+        if (response.data.success) {
+          setLinks(response.data.links);
+        }
+      } catch (error) {
+        console.error('Error fetching links:', error);
+        setErrorMessage('Failed to load links from database.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLinks();
+  }, []);
+
+  // Handler for profile changes in local state
+  const handleProfileChange = (key, value) => {
+    setProfileData((prev) => {
+      const updated = { ...prev, [key]: value };
+      
+      // Auto-save theme and accentColor changes immediately
+      if (key === 'selectedTheme' || key === 'accentColor') {
+        saveImmediateProfileField(key, value);
+      }
+      
+      return updated;
+    });
+  };
+
+  // Helper to save specific profile fields (like theme/color) immediately on click
+  const saveImmediateProfileField = async (key, value) => {
+    try {
+      await updateProfile({ [key]: value });
+    } catch (error) {
+      console.error(`Failed to auto-save field ${key}:`, error);
+    }
+  };
+
+  // Handler to manually save text profile adjustments (Name, Username, Bio)
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    setIsProfileSaving(true);
+    setErrorMessage('');
+    
+    try {
+      const result = await updateProfile(profileData);
+      if (result.success) {
+        setIsProfileSaved(true);
+        setTimeout(() => setIsProfileSaved(false), 2000);
+      } else {
+        setErrorMessage(result.message);
+      }
+    } catch (error) {
+      setErrorMessage('Server error updating profile details.');
+    } finally {
+      setIsProfileSaving(false);
+    }
+  };
+
+  // Handler to add a new link
+  const handleAddLink = async (title, url) => {
+    try {
+      const response = await API.post('/links', { title, url });
+      if (response.data.success) {
+        setLinks((prev) => [...prev, response.data.link]);
+        return true;
+      }
+    } catch (error) {
+      console.error('Error adding link:', error);
+      return false;
+    }
+    return false;
+  };
+
+  // Handler to update link fields (active status, title, URL, etc.)
+  const handleUpdateLink = async (linkId, updatedFields) => {
+    try {
+      // Optimistically update local state
+      setLinks((prev) =>
+        prev.map((link) => (link._id === linkId ? { ...link, ...updatedFields } : link))
+      );
+
+      const response = await API.put(`/links/${linkId}`, updatedFields);
+      return response.data.success;
+    } catch (error) {
+      console.error('Error updating link:', error);
+      setErrorMessage('Failed to sync link updates.');
+      return false;
+    }
+  };
+
+  // Handler to delete a link
+  const handleDeleteLink = async (linkId) => {
+    const confirm = window.confirm('Are you sure you want to delete this link?');
+    if (!confirm) return;
+
+    try {
+      // Optimistically update local state
+      setLinks((prev) => prev.filter((link) => link._id !== linkId));
+      
+      const response = await API.delete(`/links/${linkId}`);
+      return response.data.success;
+    } catch (error) {
+      console.error('Error deleting link:', error);
+      setErrorMessage('Failed to delete link.');
+      return false;
+    }
+  };
+
+  // Handler to move link indices (reorder)
+  const handleMoveLink = async (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= links.length) return;
+
+    const updatedLinks = [...links];
+    // Swap order values in array
+    const tempOrder = updatedLinks[fromIndex].order;
+    updatedLinks[fromIndex].order = updatedLinks[toIndex].order;
+    updatedLinks[toIndex].order = tempOrder;
+
+    // Swap elements in index array
+    const temp = updatedLinks[fromIndex];
+    updatedLinks[fromIndex] = updatedLinks[toIndex];
+    updatedLinks[toIndex] = temp;
+
+    // Sort by order ascending
+    updatedLinks.sort((a, b) => a.order - b.order);
+    setLinks(updatedLinks);
+
+    try {
+      // Persist the order swap changes in parallel database calls
+      await Promise.all([
+        API.put(`/links/${updatedLinks[fromIndex]._id}`, { order: updatedLinks[fromIndex].order }),
+        API.put(`/links/${updatedLinks[toIndex]._id}`, { order: updatedLinks[toIndex].order }),
+      ]);
+    } catch (error) {
+      console.error('Error saving link order:', error);
+      setErrorMessage('Failed to sync link ordering updates.');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-50 gap-3">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+        <p className="text-sm font-semibold text-slate-500">Loading your profile dashboard...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <Navbar />
+
+      {/* Mobile-Only Tab Segmented Control */}
+      <div className="lg:hidden sticky top-[65px] z-30 w-full bg-white border-b border-slate-200 py-2.5 px-4 flex gap-2 justify-center">
+        <button
+          onClick={() => setMobileView('edit')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all ${
+            mobileView === 'edit'
+              ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+              : 'text-slate-500 border border-transparent'
+          }`}
+        >
+          <LayoutDashboard className="h-4 w-4" />
+          <span>Edit Bio & Links</span>
+        </button>
+        <button
+          onClick={() => setMobileView('preview')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all ${
+            mobileView === 'preview'
+              ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+              : 'text-slate-500 border border-transparent'
+          }`}
+        >
+          <Eye className="h-4 w-4" />
+          <span>Live Phone Preview</span>
+        </button>
+      </div>
+
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {errorMessage && (
+          <div className="mb-6 flex items-start gap-3 rounded-2xl bg-rose-50 border border-rose-100 p-4 text-rose-700 text-sm">
+            <AlertCircle className="h-5 w-5 shrink-0 text-rose-500" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {/* Dashboard split content */}
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 items-start">
+          
+          {/* Left Panel: Editor (Shown on edit view for mobile, and always on desktop) */}
+          <div className={`lg:col-span-6 space-y-6 ${mobileView === 'edit' ? 'block' : 'hidden lg:block'}`}>
+            <div className="rounded-3xl bg-white border border-slate-200/80 p-6 shadow-sm">
+              <DashboardEditor
+                profileData={profileData}
+                links={links}
+                onProfileChange={handleProfileChange}
+                onSaveProfile={handleSaveProfile}
+                onAddLink={handleAddLink}
+                onUpdateLink={handleUpdateLink}
+                onDeleteLink={handleDeleteLink}
+                onMoveLink={handleMoveLink}
+                isProfileSaving={isProfileSaving}
+                isProfileSaved={isProfileSaved}
+              />
+            </div>
+          </div>
+
+          {/* Right Panel: Mobile Preview (Shown on preview view for mobile, and always on desktop) */}
+          <div className={`lg:col-span-4 lg:sticky lg:top-24 ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
+            <div className="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm">
+              <div className="text-center mb-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  Real-time Preview
+                </span>
+              </div>
+              <LivePreview profileData={profileData} links={links} />
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
