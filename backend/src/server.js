@@ -1,4 +1,20 @@
 require('dotenv').config();
+
+// Transparently intercept mongoose imports if MONGODB_URI is empty or holds a placeholder.
+// This loads our zero-dependency high-performance local file-based database mock!
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri || mongoUri.includes('<username>') || mongoUri.trim() === '') {
+  const Module = require('module');
+  const originalRequire = Module.prototype.require;
+  const mockMongoose = require('./config/mongoose-mock');
+  Module.prototype.require = function (id) {
+    if (id === 'mongoose') {
+      return mockMongoose;
+    }
+    return originalRequire.apply(this, arguments);
+  };
+}
+
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
