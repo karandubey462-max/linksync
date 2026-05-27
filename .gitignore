@@ -26,3 +26,5 @@ yarn-error.log*
 
 # Mock local database
 backend/mock-db.json
+
+.vercel

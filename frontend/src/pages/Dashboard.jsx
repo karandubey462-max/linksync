@@ -27,13 +27,15 @@ const Dashboard = () => {
   // Initialize local profile state once user is fetched from AuthContext
   useEffect(() => {
     if (user) {
+      const savedTheme = localStorage.getItem('linksync-theme');
+
       setProfileData({
         name: user.name || '',
         username: user.username || '',
         bio: user.bio || '',
         avatar: user.avatar || '',
         accentColor: user.accentColor || '#6366f1',
-        selectedTheme: user.selectedTheme || 'minimal',
+        selectedTheme: savedTheme || user.selectedTheme || 'minimal',
       });
     }
   }, [user]);
@@ -64,6 +66,9 @@ const Dashboard = () => {
       
       // Auto-save theme and accentColor changes immediately
       if (key === 'selectedTheme' || key === 'accentColor') {
+        if (key === 'selectedTheme') {
+          localStorage.setItem('linksync-theme', value);
+        }
         saveImmediateProfileField(key, value);
       }
       
@@ -165,6 +170,24 @@ const Dashboard = () => {
     }
   };
 
+  const handleResetStats = async () => {
+    const confirm = window.confirm('Reset click stats for all links?');
+    if (!confirm) return false;
+
+    const previousLinks = links;
+
+    try {
+      setLinks((prev) => prev.map((link) => ({ ...link, clicks: 0 })));
+      const response = await API.patch('/links/reset-clicks');
+      return response.data.success;
+    } catch (error) {
+      console.error('Error resetting click stats:', error);
+      setLinks(previousLinks);
+      setErrorMessage('Failed to reset click stats.');
+      return false;
+    }
+  };
+
   // Handler to move link indices (reorder)
   const handleMoveLink = async (fromIndex, toIndex) => {
     if (toIndex < 0 || toIndex >= links.length) return;
@@ -260,6 +283,7 @@ const Dashboard = () => {
                 onUpdateLink={handleUpdateLink}
                 onDeleteLink={handleDeleteLink}
                 onMoveLink={handleMoveLink}
+                onResetStats={handleResetStats}
                 isProfileSaving={isProfileSaving}
                 isProfileSaved={isProfileSaved}
               />

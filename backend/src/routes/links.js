@@ -47,6 +47,27 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
+// @desc    Reset click counts for all links owned by current user
+// @route   PATCH /api/links/reset-clicks
+// @access  Private
+router.patch('/reset-clicks', protect, async (req, res) => {
+  try {
+    const links = await Link.find({ userId: req.user.id });
+
+    await Promise.all(
+      links.map((link) => {
+        link.clicks = 0;
+        return link.save();
+      })
+    );
+
+    res.json({ success: true, message: 'Click stats reset successfully' });
+  } catch (error) {
+    console.error('Reset clicks error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // @desc    Update a link
 // @route   PUT /api/links/:id
 // @access  Private

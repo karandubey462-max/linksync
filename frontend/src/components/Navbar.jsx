@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, ExternalLink, Sparkles, User } from 'lucide-react';
+import { Check, Copy, ExternalLink, LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -16,6 +17,15 @@ const Navbar = () => {
     if (user?.username) {
       window.open(`/${user.username}`, '_blank');
     }
+  };
+
+  const handleCopyProfile = async () => {
+    if (!user?.username) return;
+
+    const profileUrl = `${window.location.origin}/${user.username}`;
+    await navigator.clipboard.writeText(profileUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
   };
 
   return (
@@ -41,6 +51,14 @@ const Navbar = () => {
             >
               <span>My Page</span>
               <ExternalLink className="h-3.5 w-3.5" />
+            </button>
+
+            <button
+              onClick={handleCopyProfile}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-700 active:scale-[0.98] transition-all"
+            >
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy Link'}</span>
             </button>
 
             {/* Logout button */}
