@@ -9,7 +9,7 @@ export default defineConfig({
     allowedHosts: 'all',
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+       target: 'https://linksync-kjou.onrender.com',
         changeOrigin: true,
       },
     },
