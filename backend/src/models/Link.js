@@ -16,10 +16,17 @@ const linkSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please add a URL'],
       trim: true,
-      match: [
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
-        'Please add a valid URL',
-      ],
+      validate: {
+        validator(value) {
+          try {
+            const parsed = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+            return Boolean(parsed.hostname && parsed.hostname.includes('.'));
+          } catch {
+            return false;
+          }
+        },
+        message: 'Please add a valid URL',
+      },
     },
     active: {
       type: Boolean,

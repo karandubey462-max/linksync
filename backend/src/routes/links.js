@@ -35,6 +35,8 @@ router.post('/', protect, async (req, res) => {
       userId: req.user.id,
       title,
       url,
+      active: true,
+      clicks: 0,
       order: nextOrder,
     });
 

@@ -104,7 +104,7 @@ const Dashboard = () => {
   // Handler to add a new link
   const handleAddLink = async (title, url) => {
     try {
-      const response = await API.post('/links', { title, url });
+      const response = await API.post('/links', { title: title.trim(), url: url.trim() });
       if (response.data.success) {
         setLinks((prev) => [...prev, response.data.link]);
         return true;
@@ -118,16 +118,27 @@ const Dashboard = () => {
 
   // Handler to update link fields (active status, title, URL, etc.)
   const handleUpdateLink = async (linkId, updatedFields) => {
+    const previousLinks = links;
+
     try {
+      const sanitizedFields = { ...updatedFields };
+      if (typeof sanitizedFields.title === 'string') {
+        sanitizedFields.title = sanitizedFields.title.trim();
+      }
+      if (typeof sanitizedFields.url === 'string') {
+        sanitizedFields.url = sanitizedFields.url.trim();
+      }
+
       // Optimistically update local state
       setLinks((prev) =>
-        prev.map((link) => (link._id === linkId ? { ...link, ...updatedFields } : link))
+        prev.map((link) => (link._id === linkId ? { ...link, ...sanitizedFields } : link))
       );
 
-      const response = await API.put(`/links/${linkId}`, updatedFields);
+      const response = await API.put(`/links/${linkId}`, sanitizedFields);
       return response.data.success;
     } catch (error) {
       console.error('Error updating link:', error);
+      setLinks(previousLinks);
       setErrorMessage('Failed to sync link updates.');
       return false;
     }
@@ -138,6 +149,8 @@ const Dashboard = () => {
     const confirm = window.confirm('Are you sure you want to delete this link?');
     if (!confirm) return;
 
+    const previousLinks = links;
+
     try {
       // Optimistically update local state
       setLinks((prev) => prev.filter((link) => link._id !== linkId));
@@ -146,6 +159,7 @@ const Dashboard = () => {
       return response.data.success;
     } catch (error) {
       console.error('Error deleting link:', error);
+      setLinks(previousLinks);
       setErrorMessage('Failed to delete link.');
       return false;
     }
@@ -156,6 +170,8 @@ const Dashboard = () => {
     if (toIndex < 0 || toIndex >= links.length) return;
 
     const updatedLinks = [...links];
+    const movedLinks = [updatedLinks[fromIndex], updatedLinks[toIndex]];
+
     // Swap order values in array
     const tempOrder = updatedLinks[fromIndex].order;
     updatedLinks[fromIndex].order = updatedLinks[toIndex].order;
@@ -173,8 +189,8 @@ const Dashboard = () => {
     try {
       // Persist the order swap changes in parallel database calls
       await Promise.all([
-        API.put(`/links/${updatedLinks[fromIndex]._id}`, { order: updatedLinks[fromIndex].order }),
-        API.put(`/links/${updatedLinks[toIndex]._id}`, { order: updatedLinks[toIndex].order }),
+        API.put(`/links/${movedLinks[0]._id}`, { order: movedLinks[0].order }),
+        API.put(`/links/${movedLinks[1]._id}`, { order: movedLinks[1].order }),
       ]);
     } catch (error) {
       console.error('Error saving link order:', error);

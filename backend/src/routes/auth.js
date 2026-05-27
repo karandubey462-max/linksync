@@ -39,6 +39,10 @@ router.post('/signup', async (req, res) => {
       username: username.toLowerCase(),
       email: email.toLowerCase(),
       password,
+      bio: '',
+      avatar: '',
+      accentColor: '#6366f1',
+      selectedTheme: 'minimal',
     });
 
     if (user) {
@@ -49,12 +53,16 @@ router.post('/signup', async (req, res) => {
           userId: user._id,
           title: 'My Personal Website',
           url: 'https://example.com',
+          active: true,
+          clicks: 0,
           order: 0,
         },
         {
           userId: user._id,
           title: 'Follow me on Twitter',
           url: 'https://twitter.com',
+          active: true,
+          clicks: 0,
           order: 1,
         }
       ]);

@@ -86,6 +86,10 @@ class MockModel {
     return this._modifiedPaths.has(field);
   }
 
+  get id() {
+    return this._id;
+  }
+
   async save() {
     // Run pre-save hooks (e.g. password hashing)
     if (this._hooks && this._hooks.pre && this._hooks.pre.save) {
@@ -128,6 +132,17 @@ class MockModel {
     db[this._collectionName] = db[this._collectionName].filter(item => item._id !== this._id);
     writeDB(db);
     return { deletedCount: 1 };
+  }
+
+  toJSON() {
+    const plainData = {};
+    for (const [key, val] of Object.entries(this)) {
+      if (!key.startsWith('_') && typeof val !== 'function') {
+        plainData[key] = val;
+      }
+    }
+    plainData._id = this._id;
+    return plainData;
   }
 }
 

@@ -15,14 +15,29 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
 
   // Handle auto-save on blur or enter key
   const handleSave = async () => {
-    if (title === link.title && url === link.url) return;
-    if (!title.trim() || !url.trim()) return;
+    const trimmedTitle = title.trim();
+    const trimmedUrl = url.trim();
+
+    if (trimmedTitle === link.title && trimmedUrl === link.url) return;
+    if (!trimmedTitle || !trimmedUrl) {
+      setTitle(link.title);
+      setUrl(link.url);
+      return;
+    }
 
     setIsUpdating(true);
-    await onUpdate(link._id, { title, url });
+    const success = await onUpdate(link._id, { title: trimmedTitle, url: trimmedUrl });
     setIsUpdating(false);
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+
+    if (success) {
+      setTitle(trimmedTitle);
+      setUrl(trimmedUrl);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+    } else {
+      setTitle(link.title);
+      setUrl(link.url);
+    }
   };
 
   const handleToggleActive = async () => {
