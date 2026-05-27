@@ -4,6 +4,7 @@ import { config } from "./config.js";
 export async function connectDatabase() {
   if (mongoose.connection.readyState === 1) return;
   await mongoose.connect(config.MONGODB_URI, {
-    autoIndex: config.NODE_ENV !== "production"
+    autoIndex: config.NODE_ENV !== "production",
+    serverSelectionTimeoutMS: 10_000
   });
 }
