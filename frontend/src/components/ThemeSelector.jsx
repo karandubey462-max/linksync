@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles, Moon, Sun } from 'lucide-react';
 
-const ThemeSelector = ({ selectedTheme, onSelectTheme }) => {
+const ThemeSelector = ({ selectedTheme, onSelectTheme, isDark = false }) => {
   const themes = [
     {
       id: 'minimal',
@@ -35,8 +35,8 @@ const ThemeSelector = ({ selectedTheme, onSelectTheme }) => {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-bold text-slate-800">Choose Profile Theme</h3>
-        <p className="text-sm text-slate-500">Pick a background and card aesthetic for your public link tree.</p>
+        <h3 className={`text-lg font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Choose Profile Theme</h3>
+        <p className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Pick a background and card aesthetic for your public profile.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -50,8 +50,8 @@ const ThemeSelector = ({ selectedTheme, onSelectTheme }) => {
               onClick={() => onSelectTheme(theme.id)}
               className={`relative flex flex-col text-left rounded-2xl border p-4 transition-all duration-300 ${
                 isSelected
-                  ? 'border-indigo-600 ring-2 ring-indigo-500/20 shadow-md scale-[1.02]'
-                  : 'border-slate-200 hover:border-slate-300 hover:scale-[1.01] hover:shadow-sm bg-white'
+                  ? isDark ? 'border-cyan-300 ring-2 ring-cyan-300/20 shadow-md scale-[1.02] bg-slate-900' : 'border-indigo-600 ring-2 ring-indigo-500/20 shadow-md scale-[1.02]'
+                  : isDark ? 'border-slate-700 bg-slate-900 hover:border-slate-500 hover:scale-[1.01]' : 'border-slate-200 hover:border-slate-300 hover:scale-[1.01] hover:shadow-sm bg-white'
               }`}
             >
               {/* Miniature Theme Preview Mockup */}
@@ -66,8 +66,8 @@ const ThemeSelector = ({ selectedTheme, onSelectTheme }) => {
 
               {/* Title & Description */}
               <div className="flex items-center gap-2">
-                <Icon className={`h-4.5 w-4.5 ${isSelected ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span className="font-semibold text-slate-800 text-sm">{theme.name}</span>
+                <Icon className={`h-4.5 w-4.5 ${isSelected ? isDark ? 'text-cyan-300' : 'text-indigo-600' : 'text-slate-400'}`} />
+                <span className={`font-semibold text-sm ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{theme.name}</span>
               </div>
               <span className="text-xs text-slate-400 mt-1">{theme.description}</span>
 

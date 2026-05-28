@@ -22,6 +22,8 @@ const Dashboard = () => {
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [mobileView, setMobileView] = useState('edit'); // 'edit' or 'preview'
+  const [dashboardTheme, setDashboardTheme] = useState(() => localStorage.getItem('linksync-dashboard-theme') || 'light');
+  const isDark = dashboardTheme === 'dark';
 
   // Initialize local profile state once user is fetched from AuthContext
   useEffect(() => {
@@ -72,6 +74,14 @@ const Dashboard = () => {
       }
       
       return updated;
+    });
+  };
+
+  const toggleDashboardTheme = () => {
+    setDashboardTheme((current) => {
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('linksync-dashboard-theme', next);
+      return next;
     });
   };
 
@@ -192,28 +202,15 @@ const Dashboard = () => {
     if (toIndex < 0 || toIndex >= links.length) return;
 
     const updatedLinks = [...links];
-    const movedLinks = [updatedLinks[fromIndex], updatedLinks[toIndex]];
-
-    // Swap order values in array
-    const tempOrder = updatedLinks[fromIndex].order;
-    updatedLinks[fromIndex].order = updatedLinks[toIndex].order;
-    updatedLinks[toIndex].order = tempOrder;
-
-    // Swap elements in index array
     const temp = updatedLinks[fromIndex];
     updatedLinks[fromIndex] = updatedLinks[toIndex];
     updatedLinks[toIndex] = temp;
 
-    // Sort by order ascending
-    updatedLinks.sort((a, b) => a.order - b.order);
-    setLinks(updatedLinks);
+    const orderedLinks = updatedLinks.map((link, index) => ({ ...link, order: index + 1 }));
+    setLinks(orderedLinks);
 
     try {
-      // Persist the order swap changes in parallel database calls
-      await Promise.all([
-        API.put(`/links/${movedLinks[0]._id}`, { order: movedLinks[0].order }),
-        API.put(`/links/${movedLinks[1]._id}`, { order: movedLinks[1].order }),
-      ]);
+      await Promise.all(orderedLinks.map((link) => API.put(`/links/${link._id}`, { order: link.order })));
     } catch (error) {
       console.error('Error saving link order:', error);
       setErrorMessage('Failed to sync link ordering updates.');
@@ -230,17 +227,17 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-slate-50 flex flex-col">
-      <Navbar />
+    <div className={`min-h-screen overflow-x-hidden flex flex-col transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
+      <Navbar isDark={isDark} onToggleTheme={toggleDashboardTheme} />
 
       {/* Mobile-Only Tab Segmented Control */}
-      <div className="lg:hidden sticky top-16 z-30 w-full bg-white border-b border-slate-200 py-2.5 px-3 flex gap-2 justify-center">
+      <div className={`lg:hidden sticky top-16 z-30 w-full border-b py-2.5 px-3 flex gap-2 justify-center ${isDark ? 'border-slate-800 bg-slate-950/95' : 'border-slate-200 bg-white'}`}>
         <button
           onClick={() => setMobileView('edit')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all ${
             mobileView === 'edit'
-              ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
-              : 'text-slate-500 border border-transparent'
+              ? isDark ? 'bg-cyan-400/10 text-cyan-200 border border-cyan-400/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+              : isDark ? 'text-slate-400 border border-transparent' : 'text-slate-500 border border-transparent'
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -250,8 +247,8 @@ const Dashboard = () => {
           onClick={() => setMobileView('preview')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all ${
             mobileView === 'preview'
-              ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
-              : 'text-slate-500 border border-transparent'
+              ? isDark ? 'bg-cyan-400/10 text-cyan-200 border border-cyan-400/20' : 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+              : isDark ? 'text-slate-400 border border-transparent' : 'text-slate-500 border border-transparent'
           }`}
         >
           <Eye className="h-4 w-4" />
@@ -261,7 +258,7 @@ const Dashboard = () => {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-6">
         {errorMessage && (
-          <div className="mb-6 flex items-start gap-3 rounded-2xl bg-rose-50 border border-rose-100 p-4 text-rose-700 text-sm">
+          <div className={`mb-6 flex items-start gap-3 rounded-2xl border p-4 text-sm ${isDark ? 'border-rose-500/20 bg-rose-500/10 text-rose-100' : 'border-rose-100 bg-rose-50 text-rose-700'}`}>
             <AlertCircle className="h-5 w-5 shrink-0 text-rose-500" />
             <span>{errorMessage}</span>
           </div>
@@ -272,7 +269,7 @@ const Dashboard = () => {
           
           {/* Left Panel: Editor (Shown on edit view for mobile, and always on desktop) */}
           <div className={`safe-panel lg:col-span-6 space-y-6 ${mobileView === 'edit' ? 'block' : 'hidden lg:block'}`}>
-            <div className="rounded-3xl bg-white border border-slate-200/80 p-4 shadow-sm sm:p-6">
+            <div className={`rounded-3xl border p-4 shadow-sm sm:p-6 ${isDark ? 'border-slate-800 bg-slate-900 shadow-black/20' : 'border-slate-200/80 bg-white'}`}>
               <DashboardEditor
                 profileData={profileData}
                 links={links}
@@ -285,15 +282,16 @@ const Dashboard = () => {
                 onResetStats={handleResetStats}
                 isProfileSaving={isProfileSaving}
                 isProfileSaved={isProfileSaved}
+                isDark={isDark}
               />
             </div>
           </div>
 
           {/* Right Panel: Mobile Preview (Shown on preview view for mobile, and always on desktop) */}
           <div className={`safe-panel lg:col-span-4 lg:sticky lg:top-24 lg:self-start ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
-            <div className="rounded-3xl bg-white border border-slate-200/80 p-4 shadow-sm sm:p-5">
+            <div className={`rounded-3xl border p-4 shadow-sm sm:p-5 ${isDark ? 'border-slate-800 bg-slate-900 shadow-black/20' : 'border-slate-200/80 bg-white'}`}>
               <div className="text-center mb-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-500'}`}>
                   Real-time Preview
                 </span>
               </div>

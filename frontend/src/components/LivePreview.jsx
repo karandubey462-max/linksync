@@ -86,9 +86,9 @@ const LivePreview = ({ profileData, links }) => {
             {/* Active Links Container */}
             <div className="w-full space-y-2.5 mt-6">
               {activeLinks.length > 0 ? (
-                activeLinks.map((link) => (
+                activeLinks.map((link, index) => (
                   <div
-                    key={link._id || link.id || Math.random().toString()}
+                    key={link._id || link.id || `${link.title}-${link.url}-${index}`}
                     style={getButtonStyle(selectedTheme)}
                     className="profile-button w-full py-2.5 px-4 rounded-xl text-[12px] font-semibold text-center truncate cursor-pointer transition-all border"
                   >
