@@ -8,6 +8,12 @@ const LivePreview = ({ profileData, links }) => {
   // Filter links to show only active ones in the mobile preview
   const activeLinks = links.filter((link) => link.active);
 
+  const openPreviewLink = (targetUrl) => {
+    if (!targetUrl) return;
+    const formattedUrl = /^https?:\/\//i.test(targetUrl) ? targetUrl : `https://${targetUrl}`;
+    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+  };
+
   // Theme-specific wrapper CSS
   const getThemeWrapperClass = () => {
     switch (selectedTheme) {
@@ -89,14 +95,16 @@ const LivePreview = ({ profileData, links }) => {
             <div className="w-full space-y-2.5 mt-6">
               {activeLinks.length > 0 ? (
                 activeLinks.map((link, index) => (
-                  <div
+                  <button
+                    type="button"
                     key={link._id || link.id || `${link.title}-${link.url}-${index}`}
+                    onClick={() => openPreviewLink(link.url)}
                     style={getButtonStyle(selectedTheme)}
                     className="profile-button w-full py-2.5 px-3 rounded-xl text-[12px] font-semibold cursor-pointer transition-all border flex items-center gap-2 text-left"
                   >
                     <SiteLogo url={link.url} size="sm" />
                     <span className="min-w-0 flex-1 truncate">{link.title || 'Untitled Link'}</span>
-                  </div>
+                  </button>
                 ))
               ) : (
                 <div className="text-center py-6 px-4 border border-dashed border-slate-300/30 rounded-2xl opacity-50 text-[10px]">

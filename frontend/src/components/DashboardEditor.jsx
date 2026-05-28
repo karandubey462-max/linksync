@@ -4,17 +4,25 @@ import ThemeSelector from './ThemeSelector';
 import { BarChart2, Plus, User, Link2, Sparkles, Upload, Loader2, Check } from 'lucide-react';
 
 const avatarPresets = [
-  { name: 'Ocean', bg: '#0ea5e9', fg: '#ecfeff' },
-  { name: 'Mint', bg: '#10b981', fg: '#f0fdf4' },
-  { name: 'Sunset', bg: '#f97316', fg: '#fff7ed' },
-  { name: 'Rose', bg: '#e11d48', fg: '#fff1f2' },
-  { name: 'Violet', bg: '#7c3aed', fg: '#f5f3ff' },
-  { name: 'Slate', bg: '#0f172a', fg: '#f8fafc' },
+  { name: 'Male 1', bg: '#dbeafe', skin: '#f2b894', hair: '#2f241f', shirt: '#1d4ed8', kind: 'male', glasses: true, beard: true },
+  { name: 'Male 2', bg: '#dcfce7', skin: '#c9865a', hair: '#111827', shirt: '#059669', kind: 'male', glasses: false, beard: true },
+  { name: 'Male 3', bg: '#fef3c7', skin: '#8d5524', hair: '#3f2a1d', shirt: '#f97316', kind: 'male', glasses: true, beard: false },
+  { name: 'Female 1', bg: '#fce7f3', skin: '#f0b78f', hair: '#4a2512', shirt: '#db2777', kind: 'female', glasses: false },
+  { name: 'Female 2', bg: '#ede9fe', skin: '#b77952', hair: '#111827', shirt: '#7c3aed', kind: 'female', glasses: true },
+  { name: 'Female 3', bg: '#cffafe', skin: '#f1c6a8', hair: '#8b3a24', shirt: '#0891b2', kind: 'female', glasses: false },
 ];
 
-function makeAvatarDataUrl(label, bg, fg) {
-  const initial = (label || 'L').trim().charAt(0).toUpperCase() || 'L';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><rect width="256" height="256" rx="128" fill="${bg}"/><circle cx="198" cy="54" r="34" fill="${fg}" opacity=".16"/><circle cx="58" cy="202" r="42" fill="${fg}" opacity=".12"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="${fg}" font-family="Inter, Arial, sans-serif" font-size="104" font-weight="800">${initial}</text></svg>`;
+function makeAvatarDataUrl(avatar) {
+  const hairShape = avatar.kind === 'female'
+    ? `<path d="M61 109c-10-38 8-73 45-83 42-11 82 12 90 54 5 25-2 48-12 66-10-21-26-32-50-32H96c-16 0-27 7-35 21z" fill="${avatar.hair}"/>`
+    : `<path d="M63 84c7-37 33-57 69-57 33 0 56 18 62 51-22-14-44-13-69-9-21 3-42 4-62 15z" fill="${avatar.hair}"/>`;
+  const beard = avatar.beard
+    ? `<path d="M84 126c10 28 31 43 48 43s38-15 48-43c-12 10-28 15-48 15s-36-5-48-15z" fill="${avatar.hair}" opacity=".92"/>`
+    : '';
+  const glasses = avatar.glasses
+    ? `<g fill="none" stroke="#1f2937" stroke-width="6"><circle cx="105" cy="106" r="19"/><circle cx="153" cy="106" r="19"/><path d="M124 106h10"/></g>`
+    : '';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><rect width="256" height="256" rx="128" fill="${avatar.bg}"/><circle cx="207" cy="50" r="28" fill="#fff" opacity=".45"/><path d="M54 224c11-42 39-65 74-65s63 23 74 65z" fill="${avatar.shirt}"/><circle cx="128" cy="96" r="58" fill="${avatar.skin}"/>${hairShape}<path d="M78 99c3-18 13-30 28-38 21 15 55 18 82 8 9 11 14 25 14 42 0 48-34 78-74 78s-74-30-74-78c0-4 0-8 1-12z" fill="${avatar.skin}"/>${beard}<circle cx="107" cy="108" r="6" fill="#1f2937"/><circle cx="151" cy="108" r="6" fill="#1f2937"/>${glasses}<path d="M111 135c10 9 25 9 35 0" fill="none" stroke="#7f3f2a" stroke-width="6" stroke-linecap="round"/></svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
@@ -22,6 +30,7 @@ const DashboardEditor = ({
   profileData,
   links,
   onProfileChange,
+  onAutoSaveField,
   onSaveProfile,
   onAddLink,
   onUpdateLink,
@@ -296,7 +305,7 @@ const DashboardEditor = ({
               </label>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                 {avatarPresets.map((avatar) => {
-                  const dataUrl = makeAvatarDataUrl(profileData.name || profileData.username, avatar.bg, avatar.fg);
+                  const dataUrl = makeAvatarDataUrl(avatar);
                   const selected = profileData.avatar === dataUrl;
                   return (
                     <button
@@ -322,6 +331,7 @@ const DashboardEditor = ({
                 type="url"
                 value={profileData.avatar && !profileData.avatar.startsWith('data:') ? profileData.avatar : ''}
                 onChange={(e) => onProfileChange('avatar', e.target.value)}
+                onBlur={(e) => onAutoSaveField?.('avatar', e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
                 className={`w-full rounded-xl border py-2.5 px-3.5 text-sm transition focus:outline-none focus:border-indigo-500 ${isDark ? 'border-slate-700 bg-slate-900 text-slate-100 placeholder-slate-500 focus:bg-slate-900' : 'border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:bg-white'}`}
               />
@@ -349,7 +359,7 @@ const DashboardEditor = ({
                   </label>
                   <input
                     type="text"
-                    value={profileData.username}
+                  value={profileData.username}
                     onChange={(e) => onProfileChange('username', e.target.value.toLowerCase().replace(/\s/g, ''))}
                     placeholder="username"
                     className={`w-full rounded-xl border py-2.5 px-3.5 text-sm transition focus:outline-none focus:border-indigo-500 ${isDark ? 'border-slate-700 bg-slate-900 text-slate-100 placeholder-slate-500 focus:bg-slate-900' : 'border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:bg-white'}`}
@@ -365,6 +375,7 @@ const DashboardEditor = ({
                 <textarea
                   value={profileData.bio}
                   onChange={(e) => onProfileChange('bio', e.target.value)}
+                  onBlur={(e) => onAutoSaveField?.('bio', e.target.value)}
                   placeholder="Tell your visitors who you are..."
                   rows={3}
                   maxLength={160}

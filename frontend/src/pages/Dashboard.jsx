@@ -65,8 +65,8 @@ const Dashboard = () => {
     setProfileData((prev) => {
       const updated = { ...prev, [key]: value };
       
-      // Auto-save theme and accentColor changes immediately
-      if (key === 'selectedTheme' || key === 'accentColor') {
+      // Auto-save lightweight visual changes immediately.
+      if (key === 'selectedTheme' || key === 'accentColor' || key === 'avatar') {
         if (key === 'selectedTheme') {
           localStorage.setItem('linksync-theme', value);
         }
@@ -101,6 +101,14 @@ const Dashboard = () => {
     setErrorMessage('');
     
     try {
+      if (profileData.username !== user?.username) {
+        const availability = await API.get(`/auth/username/${profileData.username}`);
+        if (!availability.data.valid || !availability.data.available) {
+          setErrorMessage(availability.data.message || 'Username is not available.');
+          return;
+        }
+      }
+
       const result = await updateProfile(profileData);
       if (result.success) {
         setIsProfileSaved(true);
@@ -274,6 +282,7 @@ const Dashboard = () => {
                 profileData={profileData}
                 links={links}
                 onProfileChange={handleProfileChange}
+                onAutoSaveField={saveImmediateProfileField}
                 onSaveProfile={handleSaveProfile}
                 onAddLink={handleAddLink}
                 onUpdateLink={handleUpdateLink}

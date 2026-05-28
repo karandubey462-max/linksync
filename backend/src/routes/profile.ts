@@ -20,6 +20,13 @@ profileRouter.put("/", requireAuth, asyncRoute(async (req: AuthenticatedRequest,
   const parsed = profileSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
 
+  if (parsed.data.username) {
+    const existing = await User.findOne({ username: parsed.data.username, _id: { $ne: req.userId } });
+    if (existing) {
+      return res.status(409).json({ success: false, message: "Username is already taken." });
+    }
+  }
+
   const user = await User.findByIdAndUpdate(req.userId, parsed.data, { new: true });
   return res.json({ success: true, user });
 }));

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, UserPlus, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import API from '../services/api';
+import { Check, User, Mail, Lock, Loader2, UserPlus, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -11,8 +12,47 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState({ checking: false, available: null, message: '' });
   const { signup } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const normalized = username.trim().toLowerCase();
+    if (!normalized) {
+      setUsernameStatus({ checking: false, available: null, message: '' });
+      return;
+    }
+
+    const usernameRegex = /^[a-z0-9_]{3,20}$/;
+    if (!usernameRegex.test(normalized)) {
+      setUsernameStatus({
+        checking: false,
+        available: false,
+        message: 'Use 3-20 letters, numbers, or underscores.',
+      });
+      return;
+    }
+
+    setUsernameStatus({ checking: true, available: null, message: 'Checking username...' });
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await API.get(`/auth/username/${normalized}`);
+        setUsernameStatus({
+          checking: false,
+          available: response.data.available,
+          message: response.data.message,
+        });
+      } catch {
+        setUsernameStatus({
+          checking: false,
+          available: false,
+          message: 'Could not check username right now.',
+        });
+      }
+    }, 350);
+
+    return () => clearTimeout(timeoutId);
+  }, [username]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +73,12 @@ const Signup = () => {
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters.');
+      return;
+    }
+
+    const availability = await API.get(`/auth/username/${username.trim().toLowerCase()}`);
+    if (!availability.data.valid || !availability.data.available) {
+      setError(availability.data.message || 'Username is not available.');
       return;
     }
 
@@ -104,6 +150,14 @@ const Signup = () => {
                   required
                 />
               </div>
+              {usernameStatus.message && (
+                <p className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
+                  usernameStatus.available ? 'text-emerald-300' : usernameStatus.checking ? 'text-slate-400' : 'text-rose-300'
+                }`}>
+                  {usernameStatus.checking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : usernameStatus.available ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
+                  {usernameStatus.message}
+                </p>
+              )}
             </div>
 
             {/* Username Field */}

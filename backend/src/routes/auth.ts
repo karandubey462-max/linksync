@@ -8,6 +8,27 @@ import { loginSchema, signupSchema } from "../validators.js";
 
 export const authRouter = Router();
 
+authRouter.get("/username/:username", asyncRoute(async (req, res) => {
+  const username = String(req.params.username ?? "").trim().toLowerCase();
+  const valid = /^[a-z0-9_]{3,20}$/.test(username);
+  if (!valid) {
+    return res.json({
+      success: true,
+      valid: false,
+      available: false,
+      message: "Username must be 3-20 characters and use only letters, numbers, or underscores."
+    });
+  }
+
+  const existing = await User.exists({ username });
+  return res.json({
+    success: true,
+    valid: true,
+    available: !existing,
+    message: existing ? "Username is already taken." : "Username is available."
+  });
+}));
+
 authRouter.post("/signup", asyncRoute(async (req, res) => {
   const parsed = signupSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
