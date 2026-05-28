@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../services/api';
+import QRCode from 'qrcode';
 import { Check, Copy, Download, ExternalLink, LogOut, Moon, QrCode, Sparkles, Sun, X } from 'lucide-react';
 
 const Navbar = ({ isDark = false, onToggleTheme }) => {
@@ -52,7 +53,22 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
       }
     } catch (error) {
       console.error('Failed to generate QR code:', error);
-      setQrError('Could not generate your QR code.');
+      try {
+        const profileUrl = `${window.location.origin}/${user.username}`;
+        const qrDataUrl = await QRCode.toDataURL(profileUrl, {
+          errorCorrectionLevel: 'M',
+          margin: 2,
+          width: 512,
+          color: {
+            dark: user.accentColor || '#0f172a',
+            light: '#ffffff',
+          },
+        });
+        setQrData({ success: true, profileUrl, trackingUrl: profileUrl, qrDataUrl });
+      } catch (qrError) {
+        console.error('Failed to generate local QR code:', qrError);
+        setQrError('Could not generate your QR code.');
+      }
     } finally {
       setQrLoading(false);
     }

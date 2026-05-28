@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import DashboardEditor from '../components/DashboardEditor';
 import LivePreview from '../components/LivePreview';
 import { LayoutDashboard, Eye, AlertCircle } from 'lucide-react';
+import { checkUsernameAvailability } from '../utils/usernameAvailability';
 
 const Dashboard = () => {
   const { user, updateProfile } = useAuth();
@@ -102,9 +103,9 @@ const Dashboard = () => {
     
     try {
       if (profileData.username !== user?.username) {
-        const availability = await API.get(`/auth/username/${profileData.username}`);
-        if (!availability.data.valid || !availability.data.available) {
-          setErrorMessage(availability.data.message || 'Username is not available.');
+        const availability = await checkUsernameAvailability(profileData.username);
+        if (!availability.valid || !availability.available) {
+          setErrorMessage(availability.message || 'Username is not available.');
           return;
         }
       }

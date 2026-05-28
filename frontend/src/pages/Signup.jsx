@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import API from '../services/api';
 import { Check, User, Mail, Lock, Loader2, UserPlus, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { checkUsernameAvailability } from '../utils/usernameAvailability';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -36,11 +36,11 @@ const Signup = () => {
     setUsernameStatus({ checking: true, available: null, message: 'Checking username...' });
     const timeoutId = setTimeout(async () => {
       try {
-        const response = await API.get(`/auth/username/${normalized}`);
+        const response = await checkUsernameAvailability(normalized);
         setUsernameStatus({
           checking: false,
-          available: response.data.available,
-          message: response.data.message,
+          available: response.available,
+          message: response.message,
         });
       } catch {
         setUsernameStatus({
@@ -76,9 +76,9 @@ const Signup = () => {
       return;
     }
 
-    const availability = await API.get(`/auth/username/${username.trim().toLowerCase()}`);
-    if (!availability.data.valid || !availability.data.available) {
-      setError(availability.data.message || 'Username is not available.');
+    const availability = await checkUsernameAvailability(username.trim().toLowerCase());
+    if (!availability.valid || !availability.available) {
+      setError(availability.message || 'Username is not available.');
       return;
     }
 
