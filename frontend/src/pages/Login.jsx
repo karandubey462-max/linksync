@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, ArrowRight, AlertCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -35,8 +35,8 @@ const Login = () => {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-12">
       {/* Decorative Blur Spheres */}
-      <div className="absolute -left-20 -top-20 h-80 w-80 rounded-full bg-indigo-600 opacity-20 blur-[100px]" />
-      <div className="absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-pink-600 opacity-20 blur-[100px]" />
+      <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-indigo-600 opacity-20 blur-[80px]" />
+      <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-pink-600 opacity-20 blur-[80px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -47,7 +47,7 @@ const Login = () => {
         {/* Logo/Brand Icon */}
         <div className="mb-8 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-500 to-pink-500 shadow-lg shadow-indigo-500/30">
-            <span className="text-2xl font-bold text-white">✨</span>
+            <Sparkles className="h-7 w-7 text-white" />
           </div>
           <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-white">
             Welcome back

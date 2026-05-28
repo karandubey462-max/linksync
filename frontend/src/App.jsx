@@ -53,8 +53,7 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          {/* Public Link-In-Bio Page */}
-          <Route path="/:username" element={<PublicProfile />} />
+          <Route path="/" element={<Home />} />
 
           {/* Auth Pages (Protected from logged-in users) */}
           <Route
@@ -84,7 +83,8 @@ function App() {
             }
           />
 
-          <Route path="/" element={<Home />} />
+          {/* Public Link-In-Bio Page. Keep this after fixed app routes. */}
+          <Route path="/:username" element={<PublicProfile />} />
 
           {/* Wildcard 404 Pages */}
           <Route path="/404" element={<NotFound />} />
