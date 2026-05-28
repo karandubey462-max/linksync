@@ -58,9 +58,9 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
         ? 'border-slate-200 bg-white shadow-sm hover:shadow-md' 
         : 'border-dashed border-slate-300 bg-slate-50/50 opacity-80'
     } p-5`}>
-      <div className="flex items-start gap-4">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
         {/* Left Side: Order Controls */}
-        <div className="flex flex-col gap-1.5 pt-1">
+        <div className="flex gap-1.5 pt-1 sm:flex-col">
           <button
             onClick={onMoveUp}
             disabled={isFirst}
@@ -80,7 +80,7 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
         </div>
 
         {/* Middle: Inputs */}
-        <div className="flex-1 space-y-3.5">
+        <div className="min-w-0 flex-1 space-y-3.5">
           {/* Link Title Input */}
           <div>
             <input
@@ -139,7 +139,7 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
         </div>
 
         {/* Right Side: Toggle Active & Delete */}
-        <div className="flex flex-col items-end justify-between self-stretch pl-1">
+        <div className="flex items-center justify-between gap-3 self-stretch pl-0 sm:flex-col sm:items-end sm:pl-1">
           {/* Active Switch Toggle */}
           <label className="relative inline-flex items-center cursor-pointer">
             <input

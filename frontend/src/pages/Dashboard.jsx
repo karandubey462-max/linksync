@@ -4,8 +4,7 @@ import API from '../services/api';
 import Navbar from '../components/Navbar';
 import DashboardEditor from '../components/DashboardEditor';
 import LivePreview from '../components/LivePreview';
-import { LayoutDashboard, Eye, MessageSquare, AlertCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { LayoutDashboard, Eye, AlertCircle } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, updateProfile } = useAuth();
@@ -231,11 +230,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen overflow-x-hidden bg-slate-50 flex flex-col">
       <Navbar />
 
       {/* Mobile-Only Tab Segmented Control */}
-      <div className="lg:hidden sticky top-[65px] z-30 w-full bg-white border-b border-slate-200 py-2.5 px-4 flex gap-2 justify-center">
+      <div className="lg:hidden sticky top-16 z-30 w-full bg-white border-b border-slate-200 py-2.5 px-3 flex gap-2 justify-center">
         <button
           onClick={() => setMobileView('edit')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all ${
@@ -245,7 +244,7 @@ const Dashboard = () => {
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
-          <span>Edit Bio & Links</span>
+          <span>Edit</span>
         </button>
         <button
           onClick={() => setMobileView('preview')}
@@ -256,11 +255,11 @@ const Dashboard = () => {
           }`}
         >
           <Eye className="h-4 w-4" />
-          <span>Live Phone Preview</span>
+          <span>Preview</span>
         </button>
       </div>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-6">
         {errorMessage && (
           <div className="mb-6 flex items-start gap-3 rounded-2xl bg-rose-50 border border-rose-100 p-4 text-rose-700 text-sm">
             <AlertCircle className="h-5 w-5 shrink-0 text-rose-500" />
@@ -269,11 +268,11 @@ const Dashboard = () => {
         )}
 
         {/* Dashboard split content */}
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 items-start">
+        <div className="grid min-w-0 grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8 items-start">
           
           {/* Left Panel: Editor (Shown on edit view for mobile, and always on desktop) */}
-          <div className={`lg:col-span-6 space-y-6 ${mobileView === 'edit' ? 'block' : 'hidden lg:block'}`}>
-            <div className="rounded-3xl bg-white border border-slate-200/80 p-6 shadow-sm">
+          <div className={`safe-panel lg:col-span-6 space-y-6 ${mobileView === 'edit' ? 'block' : 'hidden lg:block'}`}>
+            <div className="rounded-3xl bg-white border border-slate-200/80 p-4 shadow-sm sm:p-6">
               <DashboardEditor
                 profileData={profileData}
                 links={links}
@@ -291,8 +290,8 @@ const Dashboard = () => {
           </div>
 
           {/* Right Panel: Mobile Preview (Shown on preview view for mobile, and always on desktop) */}
-          <div className={`lg:col-span-4 lg:sticky lg:top-24 ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
-            <div className="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm">
+          <div className={`safe-panel lg:col-span-4 lg:sticky lg:top-24 lg:self-start ${mobileView === 'preview' ? 'block' : 'hidden lg:block'}`}>
+            <div className="rounded-3xl bg-white border border-slate-200/80 p-4 shadow-sm sm:p-5">
               <div className="text-center mb-2">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                   Real-time Preview

@@ -10,8 +10,8 @@ const features = [
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-white/10 bg-slate-950/90">
+    <main className="min-h-screen overflow-x-hidden bg-slate-950 text-white">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-950">
@@ -30,10 +30,10 @@ const Home = () => {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
-        <div>
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[minmax(0,1fr)_minmax(18rem,1fr)] md:py-20">
+        <div className="min-w-0">
           <p className="text-sm font-bold uppercase tracking-widest text-cyan-300">Bio link builder</p>
-          <h1 className="mt-5 font-display text-5xl font-bold leading-tight md:text-6xl">
+          <h1 className="mt-5 break-words font-display text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
             One simple page for all your links.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
@@ -49,7 +49,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-white/10 p-5">
+        <div className="safe-panel rounded-3xl border border-white/10 bg-white/10 p-3 sm:p-5">
           <div className="rounded-2xl bg-white p-5 text-slate-950">
             <div className="mx-auto max-w-xs rounded-3xl bg-slate-950 p-5 text-white">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-cyan-300 text-slate-950">
@@ -67,7 +67,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="bg-white py-16 text-slate-950">
+      <section className="bg-white py-14 text-slate-950 sm:py-16">
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid gap-4 md:grid-cols-3">
             {features.map(([title, copy]) => (

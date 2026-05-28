@@ -45,9 +45,9 @@ const LivePreview = ({ profileData, links }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-6 h-full min-h-[580px]">
+    <div className="flex h-full min-h-[520px] flex-col items-center justify-center py-3 sm:min-h-[580px] sm:py-6">
       {/* Smartphone frame container */}
-      <div className="relative mx-auto w-[290px] h-[580px] rounded-[48px] border-[11px] border-slate-900 bg-slate-900 shadow-2xl overflow-hidden ring-4 ring-slate-800">
+      <div className="relative mx-auto h-[540px] w-full max-w-[290px] overflow-hidden rounded-[36px] border-[8px] border-slate-900 bg-slate-900 shadow-2xl ring-4 ring-slate-800 sm:h-[580px] sm:rounded-[48px] sm:border-[11px]">
         {/* Notch/Speaker */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-5 w-28 bg-slate-900 rounded-b-2xl z-30 flex items-center justify-center">
           <div className="w-12 h-1 bg-slate-800 rounded-full" />
@@ -76,7 +76,7 @@ const LivePreview = ({ profileData, links }) => {
             </div>
 
             {/* Profile Info */}
-            <h4 className="font-display font-bold text-sm tracking-tight text-center truncate max-w-full">
+            <h4 className="max-w-full truncate text-center font-display text-sm font-bold tracking-tight">
               {name || '@username'}
             </h4>
             <p className="text-[11px] text-center opacity-70 mt-1 max-w-[200px] line-clamp-3 leading-relaxed">

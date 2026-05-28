@@ -62,8 +62,8 @@ const PublicProfile = () => {
     return (
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4">
         {/* Decorative Spheres */}
-        <div className="absolute -left-20 -top-20 h-80 w-80 rounded-full bg-indigo-600 opacity-20 blur-[100px]" />
-        <div className="absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-pink-600 opacity-20 blur-[100px]" />
+        <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-indigo-600 opacity-20 blur-[80px]" />
+        <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-pink-600 opacity-20 blur-[80px]" />
 
         <div className="z-10 text-center max-w-md">
           <motion.div
@@ -93,12 +93,12 @@ const PublicProfile = () => {
   const getThemeWrapperClass = () => {
     switch (profile.selectedTheme) {
       case 'dark':
-        return 'theme-dark min-h-screen flex flex-col justify-between py-12 px-4';
+        return 'theme-dark min-h-screen overflow-x-hidden flex flex-col justify-between py-10 px-3 sm:py-12 sm:px-4';
       case 'neon':
-        return 'theme-neon min-h-screen flex flex-col justify-between py-12 px-4';
+        return 'theme-neon min-h-screen overflow-x-hidden flex flex-col justify-between py-10 px-3 sm:py-12 sm:px-4';
       case 'minimal':
       default:
-        return 'theme-minimal min-h-screen flex flex-col justify-between py-12 px-4';
+        return 'theme-minimal min-h-screen overflow-x-hidden flex flex-col justify-between py-10 px-3 sm:py-12 sm:px-4';
     }
   };
 
@@ -129,7 +129,7 @@ const PublicProfile = () => {
   return (
     <div className={getThemeWrapperClass()}>
       {/* Centered Mobile Card Layout */}
-      <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center mt-8">
+      <div className="safe-panel w-full max-w-md mx-auto flex-1 flex flex-col items-center mt-6 sm:mt-8">
         
         {/* Avatar Image */}
         <motion.div
@@ -160,7 +160,7 @@ const PublicProfile = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="font-display text-xl font-bold tracking-tight text-center"
+          className="break-words text-center font-display text-xl font-bold tracking-tight"
         >
           {profile.name}
         </motion.h1>
@@ -198,7 +198,7 @@ const PublicProfile = () => {
                 key={link._id}
                 onClick={() => handleLinkClick(link._id, link.url)}
                 style={getButtonStyle(profile.selectedTheme)}
-                className="profile-button w-full py-4 px-6 rounded-2xl text-sm font-bold text-center truncate cursor-pointer transition-all border block focus:outline-none"
+                className="profile-button block w-full cursor-pointer truncate rounded-2xl border px-5 py-4 text-center text-sm font-bold transition-all focus:outline-none"
               >
                 {link.title}
               </motion.button>

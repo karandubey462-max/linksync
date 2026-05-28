@@ -1,15 +1,17 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth.js";
+import { asyncRoute } from "../asyncRoute.js";
 
 export const aiRouter = Router();
 
-aiRouter.post("/suggestions", requireAuth, async (req, res) => {
+aiRouter.post("/suggestions", requireAuth, asyncRoute(async (req, res) => {
   const links: Array<{ title: string; clicks?: number }> = Array.isArray(req.body.links) ? req.body.links : [];
   const topLink = [...links].sort((a, b) => (b.clicks ?? 0) - (a.clicks ?? 0))[0];
+  const name = typeof req.body.name === "string" && req.body.name.trim() ? req.body.name.trim() : "I";
 
   return res.json({
     success: true,
-    bio: "I help my audience discover my best work, offers, and updates from one polished creator profile.",
+    bio: `${name} shares important links, updates, and ways to connect in one simple profile.`,
     suggestions: [
       {
         title: topLink ? `Keep "${topLink.title}" above the fold` : "Add a primary link",
@@ -28,4 +30,4 @@ aiRouter.post("/suggestions", requireAuth, async (req, res) => {
       }
     ]
   });
-});
+}));

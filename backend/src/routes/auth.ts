@@ -2,12 +2,13 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { config } from "../config.js";
+import { asyncRoute } from "../asyncRoute.js";
 import { User } from "../models/User.js";
 import { loginSchema, signupSchema } from "../validators.js";
 
 export const authRouter = Router();
 
-authRouter.post("/signup", async (req, res) => {
+authRouter.post("/signup", asyncRoute(async (req, res) => {
   const parsed = signupSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
 
@@ -19,9 +20,9 @@ authRouter.post("/signup", async (req, res) => {
   const token = jwt.sign({ userId: user._id.toString() }, config.JWT_SECRET, { expiresIn: "14d" });
 
   return res.status(201).json({ success: true, token, user });
-});
+}));
 
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/login", asyncRoute(async (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
 
@@ -33,4 +34,4 @@ authRouter.post("/login", async (req, res) => {
 
   const token = jwt.sign({ userId: user._id.toString() }, config.JWT_SECRET, { expiresIn: "14d" });
   return res.json({ success: true, token, user });
-});
+}));
