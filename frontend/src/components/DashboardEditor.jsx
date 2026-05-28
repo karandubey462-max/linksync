@@ -58,14 +58,14 @@ const DashboardEditor = ({
     }
 
     setAddLoading(true);
-    const success = await onAddLink(newTitle, newUrl);
+    const result = await onAddLink(newTitle, newUrl);
     setAddLoading(false);
 
-    if (success) {
+    if (result.success) {
       setNewTitle('');
       setNewUrl('');
     } else {
-      setAddError('Failed to add link. Check URL format.');
+      setAddError(result.message || 'Failed to add link. Check URL format.');
     }
   };
 

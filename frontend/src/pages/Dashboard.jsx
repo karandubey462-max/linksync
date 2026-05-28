@@ -130,13 +130,17 @@ const Dashboard = () => {
       const response = await API.post('/links', { title: title.trim(), url: url.trim() });
       if (response.data.success) {
         setLinks((prev) => [...prev, response.data.link]);
-        return true;
+        return { success: true };
       }
     } catch (error) {
       console.error('Error adding link:', error);
-      return false;
+      const isNotFound = error.response?.status === 404;
+      return {
+        success: false,
+        message: error.response?.data?.message || (isNotFound ? '404 Not Found: this link page does not exist.' : 'Failed to add link. Please check the URL.'),
+      };
     }
-    return false;
+    return { success: false, message: 'Failed to add link. Please check the URL.' };
   };
 
   // Handler to update link fields (active status, title, URL, etc.)
@@ -162,7 +166,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error updating link:', error);
       setLinks(previousLinks);
-      setErrorMessage('Failed to sync link updates.');
+      setErrorMessage(error.response?.data?.message || 'Failed to sync link updates.');
       return false;
     }
   };

@@ -4,6 +4,7 @@ import { asyncRoute } from "../asyncRoute.js";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
 import { AnalyticsEvent } from "../models/AnalyticsEvent.js";
 import { Link } from "../models/Link.js";
+import { validatePublicUrl } from "../urlHealth.js";
 import { linkSchema } from "../validators.js";
 
 export const linksRouter = Router();
@@ -17,9 +18,13 @@ linksRouter.post("/", requireAuth, asyncRoute(async (req: AuthenticatedRequest, 
   const parsed = linkSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
 
+  const urlCheck = await validatePublicUrl(parsed.data.url);
+  if (!urlCheck.ok) return res.status(urlCheck.statusCode ?? 400).json({ success: false, message: urlCheck.message });
+
   const count = await Link.countDocuments({ userId: req.userId });
   const link = await Link.create({
     ...parsed.data,
+    url: urlCheck.url,
     userId: req.userId,
     order: parsed.data.order ?? count + 1,
     scheduledAt: parsed.data.scheduledAt || undefined,
@@ -34,12 +39,19 @@ linksRouter.put("/:id", requireAuth, asyncRoute(async (req: AuthenticatedRequest
   const parsed = linkSchema.partial().safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ success: false, message: parsed.error.issues[0]?.message });
 
+  const updateData = { ...parsed.data };
+  if (updateData.url) {
+    const urlCheck = await validatePublicUrl(updateData.url);
+    if (!urlCheck.ok) return res.status(urlCheck.statusCode ?? 400).json({ success: false, message: urlCheck.message });
+    updateData.url = urlCheck.url;
+  }
+
   const link = await Link.findOneAndUpdate(
     { _id: req.params.id, userId: req.userId },
     {
-      ...parsed.data,
-      scheduledAt: parsed.data.scheduledAt || undefined,
-      expiresAt: parsed.data.expiresAt || undefined
+      ...updateData,
+      scheduledAt: updateData.scheduledAt || undefined,
+      expiresAt: updateData.expiresAt || undefined
     },
     { new: true }
   );
