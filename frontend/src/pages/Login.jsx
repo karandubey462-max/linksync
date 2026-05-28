@@ -53,7 +53,7 @@ const Login = () => {
             Welcome back
           </h2>
           <p className="mt-2 text-sm text-slate-400">
-            Log in to manage your premium Link-in-Bio profile
+            Log in to manage your LinkSync profile
           </p>
         </div>
 

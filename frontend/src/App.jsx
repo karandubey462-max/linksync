@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import PublicProfile from './pages/PublicProfile';
 import NotFound from './pages/NotFound';
+import Home from './pages/Home';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -83,8 +84,7 @@ function App() {
             }
           />
 
-          {/* Root Redirect to Dashboard or Login */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Home />} />
 
           {/* Wildcard 404 Pages */}
           <Route path="/404" element={<NotFound />} />

@@ -68,7 +68,7 @@ const Signup = () => {
             Create your account
           </h2>
           <p className="mt-2 text-sm text-slate-400">
-            Claim your link-in-bio page and customize it instantly
+            Create your profile and save your links
           </p>
         </div>
 
