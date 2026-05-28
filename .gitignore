@@ -10,10 +10,8 @@ backend/.env
 frontend/.env
 
 # Build outputs
-dist/
 build/
 frontend/dist/
-backend/dist/
 
 # IDE / OS files
 .DS_Store
