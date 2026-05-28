@@ -1,5 +1,6 @@
 import React from 'react';
 import { Smartphone, Sparkles, User } from 'lucide-react';
+import SiteLogo from './SiteLogo';
 
 const LivePreview = ({ profileData, links }) => {
   const { name, bio, avatar, accentColor, selectedTheme } = profileData;
@@ -90,9 +91,10 @@ const LivePreview = ({ profileData, links }) => {
                   <div
                     key={link._id || link.id || `${link.title}-${link.url}-${index}`}
                     style={getButtonStyle(selectedTheme)}
-                    className="profile-button w-full py-2.5 px-4 rounded-xl text-[12px] font-semibold text-center truncate cursor-pointer transition-all border"
+                    className="profile-button w-full py-2.5 px-3 rounded-xl text-[12px] font-semibold cursor-pointer transition-all border flex items-center gap-2 text-left"
                   >
-                    {link.title || 'Untitled Link'}
+                    <SiteLogo url={link.url} size="sm" />
+                    <span className="min-w-0 flex-1 truncate">{link.title || 'Untitled Link'}</span>
                   </div>
                 ))
               ) : (

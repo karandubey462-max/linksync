@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, ExternalLink, BarChart2, ArrowUp, ArrowDown, Check, Loader2 } from 'lucide-react';
+import SiteLogo from './SiteLogo';
+import { getDomain, getSiteName } from '../utils/siteMeta';
 
 const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isLast, isDark = false }) => {
   const [title, setTitle] = useState(link.title);
@@ -79,6 +81,9 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
           </button>
         </div>
 
+        {/* Site logo */}
+        <SiteLogo url={url || link.url} />
+
         {/* Middle: Inputs */}
         <div className="min-w-0 flex-1 space-y-3.5">
           {/* Link Title Input */}
@@ -115,6 +120,10 @@ const LinkCard = ({ link, onUpdate, onDelete, onMoveUp, onMoveDown, isFirst, isL
               <ExternalLink className="h-4 w-4" />
             </a>
           </div>
+
+          <p className={`truncate text-[11px] font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+            {getSiteName(url || link.url)}{getDomain(url || link.url) ? ` - ${getDomain(url || link.url)}` : ''}
+          </p>
 
           {/* Analytics & State Badges */}
           <div className="flex flex-wrap items-center gap-3 pt-2.5">

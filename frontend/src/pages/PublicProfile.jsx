@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
-import { Sparkles, User, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ExternalLink, Sparkles, User, AlertCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SiteLogo from '../components/SiteLogo';
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -198,9 +199,11 @@ const PublicProfile = () => {
                 key={link._id}
                 onClick={() => handleLinkClick(link._id, link.url)}
                 style={getButtonStyle(profile.selectedTheme)}
-                className="profile-button block w-full cursor-pointer truncate rounded-2xl border px-5 py-4 text-center text-sm font-bold transition-all focus:outline-none"
+                className="profile-button flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-5 py-4 text-left text-sm font-bold transition-all focus:outline-none"
               >
-                {link.title}
+                <SiteLogo url={link.url} size="sm" />
+                <span className="min-w-0 flex-1 truncate">{link.title}</span>
+                <ExternalLink className="h-4 w-4 shrink-0 opacity-50" />
               </motion.button>
             ))
           ) : (
