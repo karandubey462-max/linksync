@@ -108,7 +108,7 @@ const Dashboard = () => {
       } else {
         setErrorMessage(result.message);
       }
-    } catch (error) {
+    } catch {
       setErrorMessage('Server error updating profile details.');
     } finally {
       setIsProfileSaving(false);

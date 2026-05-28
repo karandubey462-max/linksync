@@ -1,5 +1,5 @@
 import React from 'react';
-import { Smartphone, Sparkles, User } from 'lucide-react';
+import { Sparkles, User } from 'lucide-react';
 import SiteLogo from './SiteLogo';
 
 const LivePreview = ({ profileData, links }) => {
@@ -30,9 +30,10 @@ const LivePreview = ({ profileData, links }) => {
       };
     }
     if (theme === 'dark') {
+      const color = accentColor || '#6366f1';
       return {
-        borderColor: `${accentColor}40` || 'rgba(255, 255, 255, 0.1)',
-        boxShadow: `0 0 10px ${accentColor}15`,
+        borderColor: `${color}40`,
+        boxShadow: `0 0 10px ${color}15`,
       };
     }
     if (theme === 'neon') {

@@ -105,7 +105,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-2xl bg-slate-900/50 border border-slate-800 py-3.5 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-                  placeholder="••••••••"
+                  placeholder="Password"
                   required
                 />
               </div>
@@ -130,7 +130,7 @@ const Login = () => {
 
           {/* Switch Prompt */}
           <div className="mt-8 text-center text-sm text-slate-400">
-            Don't have an account?{' '}
+            Do not have an account?{' '}
             <Link
               to="/signup"
               className="inline-flex items-center gap-1 font-semibold text-indigo-400 hover:text-indigo-300 hover:underline"

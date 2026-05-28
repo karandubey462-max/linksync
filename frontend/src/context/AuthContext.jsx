@@ -8,6 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+  };
+
   // Synchronize loading user profile if token is present on initial load
   useEffect(() => {
     const loadUser = async () => {
@@ -62,12 +68,6 @@ export const AuthProvider = ({ children }) => {
         message: error.response?.data?.message || 'Signup failed. Please try again.',
       };
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
   };
 
   const updateProfile = async (profileData) => {

@@ -32,7 +32,7 @@ const NotFound = () => {
             Page Not Found
           </h2>
           <p className="mt-4 text-slate-400 leading-relaxed">
-            The profile username you clicked on or URL path you requested doesn't exist, is inactive, or has been changed.
+            The profile username you clicked on or URL path you requested does not exist, is inactive, or has been changed.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -75,7 +75,7 @@ const PublicProfile = () => {
             <AlertCircle className="h-16 w-16 text-rose-500 mb-4" />
             <h2 className="font-display text-2xl font-bold text-white">Profile Not Found</h2>
             <p className="mt-4 text-slate-400 leading-relaxed">
-              The LinkSync profile for <span className="font-semibold text-indigo-400">@{username}</span> doesn't exist or is currently inactive.
+              The LinkSync profile for <span className="font-semibold text-indigo-400">@{username}</span> does not exist or is currently inactive.
             </p>
             <button
               onClick={() => navigate('/login')}
@@ -112,9 +112,10 @@ const PublicProfile = () => {
       };
     }
     if (theme === 'dark') {
+      const color = profile.accentColor || '#6366f1';
       return {
-        borderColor: `${profile.accentColor}30` || 'rgba(255, 255, 255, 0.1)',
-        boxShadow: `0 0 12px ${profile.accentColor}10`,
+        borderColor: `${color}30`,
+        boxShadow: `0 0 12px ${color}10`,
       };
     }
     if (theme === 'neon') {
