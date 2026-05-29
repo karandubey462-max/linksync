@@ -31,6 +31,7 @@ const DashboardEditor = ({
   const [addError, setAddError] = useState('');
   const defaultAvatarUrl = new URL(defaultAvatar, window.location.origin).toString();
   const isDefaultAvatarSelected = !profileData.avatar || profileData.avatar === defaultAvatar || profileData.avatar === defaultAvatarUrl;
+  const isPresetAvatarSelected = isDefaultAvatarSelected || defaultAvatars.some(preset => preset.url === profileData.avatar);
 
   // Handle adding a link
   const handleAddLinkSubmit = async (e) => {
@@ -323,7 +324,7 @@ const DashboardEditor = ({
               </label>
               <input
                 type="url"
-                value={profileData.avatar && !profileData.avatar.startsWith('data:') && !isDefaultAvatarSelected ? profileData.avatar : ''}
+                value={profileData.avatar && !profileData.avatar.startsWith('data:') && !isPresetAvatarSelected ? profileData.avatar : ''}
                 onChange={(e) => onProfileChange('avatar', e.target.value)}
                 onBlur={(e) => onAutoSaveField?.('avatar', e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
