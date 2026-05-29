@@ -92,6 +92,7 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
   };
 
   return (
+    <>
     <header className={`sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors ${isDark ? 'border-slate-800 bg-slate-950/85' : 'border-slate-200/80 bg-white/80'}`}>
       <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand logo */}
@@ -153,9 +154,11 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
         )}
       </div>
 
-      {qrOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-8 backdrop-blur-sm">
-          <div className={`w-full max-w-sm rounded-3xl border p-5 shadow-2xl ${isDark ? 'border-slate-700 bg-slate-900 text-slate-100' : 'border-slate-200 bg-white text-slate-900'}`}>
+    </header>
+
+    {qrOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 px-4 py-6 backdrop-blur-sm sm:py-8">
+          <div className={`relative my-auto w-full max-w-sm rounded-3xl border p-5 shadow-2xl ${isDark ? 'border-slate-700 bg-slate-900 text-slate-100' : 'border-slate-200 bg-white text-slate-900'}`}>
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="font-display text-xl font-bold">Profile QR Code</h2>
@@ -165,20 +168,21 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
               </div>
               <button
                 onClick={() => setQrOpen(false)}
-                className={`rounded-xl p-2 transition ${isDark ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
+                className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${isDark ? 'border-slate-700 bg-slate-800 text-slate-100 hover:bg-slate-700' : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
                 aria-label="Close QR dialog"
+                title="Close"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className={`mt-5 flex min-h-64 items-center justify-center rounded-2xl border p-4 ${isDark ? 'border-slate-700 bg-slate-950' : 'border-slate-200 bg-slate-50'}`}>
+            <div className={`mt-5 flex min-h-[17rem] items-center justify-center overflow-hidden rounded-2xl border p-4 ${isDark ? 'border-slate-700 bg-slate-950' : 'border-slate-200 bg-slate-50'}`}>
               {qrLoading ? (
                 <div className="h-9 w-9 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
               ) : qrError ? (
                 <p className="text-center text-sm text-rose-500">{qrError}</p>
               ) : qrData?.qrDataUrl ? (
-                <img src={qrData.qrDataUrl} alt="QR code for your LinkSync profile" className="h-56 w-56 rounded-xl bg-white p-2" />
+                <img src={qrData.qrDataUrl} alt="QR code for your LinkSync profile" className="aspect-square h-auto max-h-60 w-full max-w-60 rounded-xl bg-white p-2 object-contain" />
               ) : null}
             </div>
 
@@ -188,7 +192,15 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
               </p>
             )}
 
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <button
+                type="button"
+                onClick={() => setQrOpen(false)}
+                className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition ${isDark ? 'bg-slate-800 text-slate-100 hover:bg-slate-700' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
+              >
+                <X className="h-4 w-4" />
+                Cancel
+              </button>
               <button
                 onClick={handleCopyQrLink}
                 disabled={!qrData?.profileUrl}
@@ -200,7 +212,7 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
               <button
                 onClick={handleDownloadQr}
                 disabled={!qrData?.qrDataUrl}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 px-4 py-2 text-sm font-bold text-white transition disabled:opacity-50"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-50"
               >
                 <Download className="h-4 w-4" />
                 Download
@@ -209,7 +221,7 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };
 

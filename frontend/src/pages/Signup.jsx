@@ -94,11 +94,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-12">
-      {/* Decorative Blur Spheres */}
-      <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-pink-600 opacity-20 blur-[80px]" />
-      <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-indigo-600 opacity-20 blur-[80px]" />
-
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-12 text-white">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -107,19 +103,22 @@ const Signup = () => {
       >
         {/* Logo/Brand Icon */}
         <div className="mb-8 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-500 to-pink-500 shadow-lg shadow-indigo-500/30">
-            <Sparkles className="h-7 w-7 text-white" />
-          </div>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-white">
+          <Link to="/" className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-950">
+            <Sparkles className="h-7 w-7" />
+          </Link>
+          <Link to="/" className="mt-4 block font-display text-lg font-bold text-slate-200">
+            LinkSync
+          </Link>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white">
             Create your account
           </h2>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-300">
             Create your profile and save your links
           </p>
         </div>
 
         {/* Card Frame */}
-        <div className="glass-dark rounded-3xl p-8 shadow-2xl">
+        <div className="rounded-3xl border border-white/10 bg-white/10 p-8 shadow-2xl">
           {error && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -145,14 +144,14 @@ const Signup = () => {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-2xl bg-slate-900/50 border border-slate-800 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm"
+                  className="w-full rounded-2xl border border-white/10 bg-slate-950/70 py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-300"
                   placeholder="John Doe"
                   required
                 />
               </div>
               {usernameStatus.message && (
                 <p className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
-                  usernameStatus.available ? 'text-emerald-300' : usernameStatus.checking ? 'text-slate-400' : 'text-rose-300'
+                  usernameStatus.available ? 'text-emerald-300' : usernameStatus.checking ? 'text-slate-300' : 'text-rose-300'
                 }`}>
                   {usernameStatus.checking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : usernameStatus.available ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
                   {usernameStatus.message}
@@ -166,14 +165,14 @@ const Signup = () => {
                 Claim Username
               </label>
               <div className="relative mt-1">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-indigo-400 font-semibold text-sm">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-cyan-300 font-semibold text-sm">
                   linksync.bio/
                 </div>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s/g, ''))}
-                  className="w-full rounded-2xl bg-slate-900/50 border border-slate-800 py-3 pl-[96px] pr-4 text-white placeholder-slate-550 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm"
+                  className="w-full rounded-2xl border border-white/10 bg-slate-950/70 py-3 pl-[96px] pr-4 text-sm text-white placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-300"
                   placeholder="yourname"
                   required
                 />
@@ -193,7 +192,7 @@ const Signup = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-2xl bg-slate-900/50 border border-slate-800 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm"
+                  className="w-full rounded-2xl border border-white/10 bg-slate-950/70 py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-300"
                   placeholder="name@example.com"
                   required
                 />
@@ -213,7 +212,7 @@ const Signup = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-2xl bg-slate-900/50 border border-slate-800 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm"
+                  className="w-full rounded-2xl border border-white/10 bg-slate-950/70 py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-300"
                   placeholder="Min. 6 characters"
                   required
                 />
@@ -224,7 +223,7 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-pink-500 py-3.5 font-semibold text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none"
+              className="group mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-3.5 font-semibold text-slate-950 transition-all hover:bg-slate-100 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
             >
               {loading ? (
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -238,11 +237,11 @@ const Signup = () => {
           </form>
 
           {/* Switch Prompt */}
-          <div className="mt-6 text-center text-sm text-slate-400">
+          <div className="mt-6 text-center text-sm text-slate-300">
             Already have an account?{' '}
             <Link
               to="/login"
-              className="inline-flex items-center gap-1 font-semibold text-indigo-400 hover:text-indigo-300 hover:underline"
+              className="inline-flex items-center gap-1 font-semibold text-cyan-300 hover:text-cyan-200 hover:underline"
             >
               <span>Log in here</span>
               <ArrowRight className="h-3 w-3" />
