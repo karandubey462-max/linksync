@@ -318,7 +318,7 @@ const DashboardEditor = ({
                       key={index}
                       type="button"
                       onClick={() => onProfileChange('avatar', preset.url)}
-                      className={`relative flex flex-col items-center justify-center rounded-2xl border p-2 text-center transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
+                      className={`relative flex items-center justify-center rounded-2xl border p-2.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
                         isSelected 
                           ? 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/10' 
                           : isDark ? 'border-slate-800 bg-slate-900/50 hover:border-slate-600' : 'border-slate-200 bg-white hover:border-slate-300'
@@ -326,7 +326,6 @@ const DashboardEditor = ({
                       title={preset.name}
                     >
                       <img src={preset.url} alt={preset.name} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
-                      <span className={`block text-[10px] font-bold mt-1.5 leading-tight ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{preset.name}</span>
                     </button>
                   );
                 })}
