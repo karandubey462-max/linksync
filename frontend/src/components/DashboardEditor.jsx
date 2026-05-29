@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import LinkCard from './LinkCard';
 import ThemeSelector from './ThemeSelector';
 import { BarChart2, Plus, User, Link2, Sparkles, Upload, Loader2, Check } from 'lucide-react';
-import defaultAvatar from '../assets/default-avatar.jpg';
+import defaultAvatar from '../assets/default-avatar.png';
 import { getAvatarUrl } from '../utils/avatarMapper';
 
 const defaultAvatars = [

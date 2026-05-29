@@ -1,4 +1,4 @@
-import defaultAvatar from '../assets/default-avatar.jpg';
+import defaultAvatar from '../assets/default-avatar.png';
 import avatar2 from '../assets/avatar2.png';
 
 const avatarMap = {
