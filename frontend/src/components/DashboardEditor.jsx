@@ -4,6 +4,26 @@ import ThemeSelector from './ThemeSelector';
 import { BarChart2, Plus, User, Link2, Sparkles, Upload, Loader2, Check } from 'lucide-react';
 import defaultAvatar from '../assets/default-avatar.jpg';
 
+const defaultAvatars = [
+  // Women
+  { name: 'Woman 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sara' },
+  { name: 'Woman 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka' },
+  { name: 'Woman 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia' },
+
+  // Men
+  { name: 'Man 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix' },
+  { name: 'Man 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver' },
+  { name: 'Man 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack' },
+
+  // Children
+  { name: 'Child 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lilou' },
+  { name: 'Child 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie' },
+
+  // Seniors
+  { name: 'Senior 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace' },
+  { name: 'Senior 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=George' }
+];
+
 const DashboardEditor = ({
   profileData,
   links,
@@ -271,19 +291,45 @@ const DashboardEditor = ({
             </div>
 
             <div>
-              <label className={`block text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Default Avatar
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-2.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                Or Select a Profile Avatar Preset
               </label>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
+                {/* Local Default Avatar */}
                 <button
                   type="button"
                   onClick={() => onProfileChange('avatar', defaultAvatarUrl)}
-                  className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition hover:-translate-y-0.5 ${isDefaultAvatarSelected ? 'border-indigo-500 ring-2 ring-indigo-500/25' : isDark ? 'border-slate-700 hover:border-slate-500' : 'border-slate-200 hover:border-slate-300'}`}
-                  aria-label="Use default avatar"
+                  className={`relative flex flex-col items-center justify-center rounded-2xl border p-2 text-center transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
+                    isDefaultAvatarSelected 
+                      ? 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/10' 
+                      : isDark ? 'border-slate-800 bg-slate-900/50 hover:border-slate-600' : 'border-slate-200 bg-white hover:border-slate-300'
+                  }`}
+                  title="Default Local Avatar"
                 >
-                  <img src={defaultAvatar} alt="" className="h-12 w-12 rounded-full object-cover" />
-                  <span className={`block text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Use this avatar</span>
+                  <img src={defaultAvatar} alt="Default" className="h-10 w-10 rounded-full object-cover" />
+                  <span className={`block text-[10px] font-bold mt-1.5 leading-tight ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Default</span>
                 </button>
+
+                {/* Dicebear Avatar Presets */}
+                {defaultAvatars.map((preset, index) => {
+                  const isSelected = profileData.avatar === preset.url;
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => onProfileChange('avatar', preset.url)}
+                      className={`relative flex flex-col items-center justify-center rounded-2xl border p-2 text-center transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
+                        isSelected 
+                          ? 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/10' 
+                          : isDark ? 'border-slate-800 bg-slate-900/50 hover:border-slate-600' : 'border-slate-200 bg-white hover:border-slate-300'
+                      }`}
+                      title={preset.name}
+                    >
+                      <img src={preset.url} alt={preset.name} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
+                      <span className={`block text-[10px] font-bold mt-1.5 leading-tight ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{preset.name}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
