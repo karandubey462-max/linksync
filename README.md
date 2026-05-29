@@ -170,3 +170,5 @@ Follow these steps to deploy your application for free:
 2. **In-Browser Image Resizing:** Avatar uploads are scaled to `120x120px` and compressed in quality on a canvas before converting to base64. This makes profile saves lightning fast and keeps database storage size trivial.
 3. **Fire-and-Forget Analytics:** When a user clicks a button on the public page, the click tracking PATCH API is called asynchronously in the background. The browser does not wait for the response to load before opening the target URL, optimizing redirection speeds.
 4. **Mobile Tab Editor Toggle:** Standard mobile editors get too long if editor forms and previews are stacked. LinkSync uses a visual segmented tab bar (`Edit` | `Preview`) at the top on mobile screens, letting users switch tabs in one click.
+
+
