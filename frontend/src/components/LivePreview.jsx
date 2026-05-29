@@ -1,6 +1,7 @@
 import React from 'react';
-import { Sparkles, User } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import SiteLogo from './SiteLogo';
+import defaultAvatar from '../assets/default-avatar.jpg';
 
 const LivePreview = ({ profileData, links }) => {
   const { name, bio, avatar, accentColor, selectedTheme } = profileData;
@@ -66,21 +67,12 @@ const LivePreview = ({ profileData, links }) => {
           <div className="flex-1 flex flex-col items-center">
             {/* Avatar Section */}
             <div className="relative mt-2 mb-3">
-              {avatar ? (
-                <img
-                  src={avatar}
-                  alt={name || 'Avatar'}
-                  className="w-18 h-18 rounded-full object-cover border-2 border-white shadow-md"
-                  style={{ borderColor: accentColor }}
-                />
-              ) : (
-                <div
-                  className="w-18 h-18 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-md"
-                  style={{ backgroundColor: accentColor || '#6366f1' }}
-                >
-                  {name ? name.charAt(0).toUpperCase() : <User className="h-8 w-8" />}
-                </div>
-              )}
+              <img
+                src={avatar || defaultAvatar}
+                alt={name || 'Avatar'}
+                className="w-18 h-18 rounded-full object-cover border-2 border-white shadow-md"
+                style={{ borderColor: accentColor }}
+              />
             </div>
 
             {/* Profile Info */}

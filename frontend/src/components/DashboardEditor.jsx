@@ -2,29 +2,7 @@ import React, { useState } from 'react';
 import LinkCard from './LinkCard';
 import ThemeSelector from './ThemeSelector';
 import { BarChart2, Plus, User, Link2, Sparkles, Upload, Loader2, Check } from 'lucide-react';
-
-const avatarPresets = [
-  { name: 'Male 1', bg: '#dbeafe', skin: '#f2b894', hair: '#2f241f', shirt: '#1d4ed8', kind: 'male', glasses: true, beard: true },
-  { name: 'Male 2', bg: '#dcfce7', skin: '#c9865a', hair: '#111827', shirt: '#059669', kind: 'male', glasses: false, beard: true },
-  { name: 'Male 3', bg: '#fef3c7', skin: '#8d5524', hair: '#3f2a1d', shirt: '#f97316', kind: 'male', glasses: true, beard: false },
-  { name: 'Female 1', bg: '#fce7f3', skin: '#f0b78f', hair: '#4a2512', shirt: '#db2777', kind: 'female', glasses: false },
-  { name: 'Female 2', bg: '#ede9fe', skin: '#b77952', hair: '#111827', shirt: '#7c3aed', kind: 'female', glasses: true },
-  { name: 'Female 3', bg: '#cffafe', skin: '#f1c6a8', hair: '#8b3a24', shirt: '#0891b2', kind: 'female', glasses: false },
-];
-
-function makeAvatarDataUrl(avatar) {
-  const hairShape = avatar.kind === 'female'
-    ? `<path d="M61 109c-10-38 8-73 45-83 42-11 82 12 90 54 5 25-2 48-12 66-10-21-26-32-50-32H96c-16 0-27 7-35 21z" fill="${avatar.hair}"/>`
-    : `<path d="M63 84c7-37 33-57 69-57 33 0 56 18 62 51-22-14-44-13-69-9-21 3-42 4-62 15z" fill="${avatar.hair}"/>`;
-  const beard = avatar.beard
-    ? `<path d="M84 126c10 28 31 43 48 43s38-15 48-43c-12 10-28 15-48 15s-36-5-48-15z" fill="${avatar.hair}" opacity=".92"/>`
-    : '';
-  const glasses = avatar.glasses
-    ? `<g fill="none" stroke="#1f2937" stroke-width="6"><circle cx="105" cy="106" r="19"/><circle cx="153" cy="106" r="19"/><path d="M124 106h10"/></g>`
-    : '';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><rect width="256" height="256" rx="128" fill="${avatar.bg}"/><circle cx="207" cy="50" r="28" fill="#fff" opacity=".45"/><path d="M54 224c11-42 39-65 74-65s63 23 74 65z" fill="${avatar.shirt}"/><circle cx="128" cy="96" r="58" fill="${avatar.skin}"/>${hairShape}<path d="M78 99c3-18 13-30 28-38 21 15 55 18 82 8 9 11 14 25 14 42 0 48-34 78-74 78s-74-30-74-78c0-4 0-8 1-12z" fill="${avatar.skin}"/>${beard}<circle cx="107" cy="108" r="6" fill="#1f2937"/><circle cx="151" cy="108" r="6" fill="#1f2937"/>${glasses}<path d="M111 135c10 9 25 9 35 0" fill="none" stroke="#7f3f2a" stroke-width="6" stroke-linecap="round"/></svg>`;
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-}
+import defaultAvatar from '../assets/default-avatar.jpg';
 
 const DashboardEditor = ({
   profileData,
@@ -46,6 +24,8 @@ const DashboardEditor = ({
   const [newUrl, setNewUrl] = useState('');
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState('');
+  const defaultAvatarUrl = new URL(defaultAvatar, window.location.origin).toString();
+  const isDefaultAvatarSelected = !profileData.avatar || profileData.avatar === defaultAvatar || profileData.avatar === defaultAvatarUrl;
 
   // Handle adding a link
   const handleAddLinkSubmit = async (e) => {
@@ -257,20 +237,11 @@ const DashboardEditor = ({
             <div className="flex flex-col sm:flex-row items-center gap-6 pb-2">
               {/* Profile Image View */}
               <div className="relative group shrink-0">
-                {profileData.avatar ? (
-                  <img
-                    src={profileData.avatar}
-                    alt="Avatar"
-                    className="w-24 h-24 rounded-full object-cover border border-slate-200"
-                  />
-                ) : (
-                  <div
-                    className="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-4xl shadow-inner"
-                    style={{ backgroundColor: profileData.accentColor || '#6366f1' }}
-                  >
-                    {profileData.name ? profileData.name.charAt(0).toUpperCase() : '?'}
-                  </div>
-                )}
+                <img
+                  src={profileData.avatar || defaultAvatar}
+                  alt="Avatar"
+                  className="w-24 h-24 rounded-full object-cover border border-slate-200"
+                />
                 {/* Upload Hover Overlay */}
                 <label className="absolute inset-0 flex items-center justify-center rounded-full bg-black/45 text-white opacity-0 group-hover:opacity-100 cursor-pointer transition-all">
                   <Upload className="h-5 w-5" />
@@ -286,7 +257,7 @@ const DashboardEditor = ({
               {/* Upload Prompts */}
               <div className="flex-1 text-center sm:text-left space-y-1">
                 <h4 className={`font-semibold text-sm ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Profile Picture</h4>
-                <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Upload a photo or choose a clean avatar below.</p>
+                <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Upload a photo or use the default avatar below.</p>
                 <label className={`inline-block mt-2 cursor-pointer rounded-lg py-1.5 px-3 text-xs font-semibold transition ${isDark ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
                   Change Photo
                   <input
@@ -301,25 +272,18 @@ const DashboardEditor = ({
 
             <div>
               <label className={`block text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Quick Avatar
+                Default Avatar
               </label>
-              <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
-                {avatarPresets.map((avatar) => {
-                  const dataUrl = makeAvatarDataUrl(avatar);
-                  const selected = profileData.avatar === dataUrl;
-                  return (
-                    <button
-                      key={avatar.name}
-                      type="button"
-                      onClick={() => onProfileChange('avatar', dataUrl)}
-                      className={`rounded-2xl border p-2 transition hover:-translate-y-0.5 ${selected ? 'border-indigo-500 ring-2 ring-indigo-500/25' : isDark ? 'border-slate-700 hover:border-slate-500' : 'border-slate-200 hover:border-slate-300'}`}
-                      aria-label={`Use ${avatar.name} avatar`}
-                    >
-                      <img src={dataUrl} alt="" className="mx-auto h-12 w-12 rounded-full" />
-                      <span className={`mt-1 block text-[10px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{avatar.name}</span>
-                    </button>
-                  );
-                })}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <button
+                  type="button"
+                  onClick={() => onProfileChange('avatar', defaultAvatarUrl)}
+                  className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition hover:-translate-y-0.5 ${isDefaultAvatarSelected ? 'border-indigo-500 ring-2 ring-indigo-500/25' : isDark ? 'border-slate-700 hover:border-slate-500' : 'border-slate-200 hover:border-slate-300'}`}
+                  aria-label="Use default avatar"
+                >
+                  <img src={defaultAvatar} alt="" className="h-12 w-12 rounded-full object-cover" />
+                  <span className={`block text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Use this avatar</span>
+                </button>
               </div>
             </div>
 
@@ -329,7 +293,7 @@ const DashboardEditor = ({
               </label>
               <input
                 type="url"
-                value={profileData.avatar && !profileData.avatar.startsWith('data:') ? profileData.avatar : ''}
+                value={profileData.avatar && !profileData.avatar.startsWith('data:') && !isDefaultAvatarSelected ? profileData.avatar : ''}
                 onChange={(e) => onProfileChange('avatar', e.target.value)}
                 onBlur={(e) => onAutoSaveField?.('avatar', e.target.value)}
                 placeholder="https://example.com/avatar.jpg"

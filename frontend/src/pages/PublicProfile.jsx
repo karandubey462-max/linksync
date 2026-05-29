@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
-import { ExternalLink, Sparkles, User, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ExternalLink, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SiteLogo from '../components/SiteLogo';
+import defaultAvatar from '../assets/default-avatar.jpg';
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -140,21 +141,12 @@ const PublicProfile = () => {
           transition={{ duration: 0.4 }}
           className="relative mb-4"
         >
-          {profile.avatar ? (
-            <img
-              src={profile.avatar}
-              alt={profile.name}
-              className="w-24 h-24 rounded-full object-cover border-4 shadow-lg"
-              style={{ borderColor: profile.accentColor }}
-            />
-          ) : (
-            <div
-              className="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-4xl shadow-lg"
-              style={{ backgroundColor: profile.accentColor || '#6366f1' }}
-            >
-              {profile.name ? profile.name.charAt(0).toUpperCase() : <User className="h-10 w-10" />}
-            </div>
-          )}
+          <img
+            src={profile.avatar || defaultAvatar}
+            alt={profile.name}
+            className="w-24 h-24 rounded-full object-cover border-4 shadow-lg"
+            style={{ borderColor: profile.accentColor }}
+          />
         </motion.div>
 
         {/* User Profile Info */}
