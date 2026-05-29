@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   // Synchronize loading user profile if token is present on initial load
   useEffect(() => {
     const loadUser = async () => {
-      if (token) {
+      if (token && !user) {
         try {
           const response = await API.get('/profile');
           if (response.data.success) {
@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     loadUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const login = async (email, password) => {

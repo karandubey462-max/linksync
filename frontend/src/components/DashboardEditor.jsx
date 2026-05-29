@@ -3,25 +3,26 @@ import LinkCard from './LinkCard';
 import ThemeSelector from './ThemeSelector';
 import { BarChart2, Plus, User, Link2, Sparkles, Upload, Loader2, Check } from 'lucide-react';
 import defaultAvatar from '../assets/default-avatar.jpg';
+import { getAvatarUrl } from '../utils/avatarMapper';
 
 const defaultAvatars = [
   // Women
-  { name: 'Woman 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&top=longHairBigHair&facialHairProbability=0' },
+  { name: 'Woman 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&top=bigHair&facialHairProbability=0' },
   { name: 'Woman 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka&top=bun&facialHairProbability=0' },
   { name: 'Woman 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sara&top=hijab&facialHairProbability=0' },
 
   // Men
-  { name: 'Man 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&top=shortHair&facialHair=beardLight&facialHairProbability=100' },
-  { name: 'Man 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&top=shortHair&facialHair=moustacheFancy&facialHairProbability=100' },
-  { name: 'Man 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&top=shortHair&facialHair=beardMajestic&facialHairProbability=100' },
+  { name: 'Man 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&top=shortRound&facialHair=beardLight&facialHairProbability=100' },
+  { name: 'Man 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&top=shortWaved&facialHair=moustacheFancy&facialHairProbability=100' },
+  { name: 'Man 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&top=theCaesar&facialHair=beardMajestic&facialHairProbability=100' },
 
   // Children
   { name: 'Child 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lilou&top=bob&facialHairProbability=0' },
-  { name: 'Child 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie&top=shortHair&facialHairProbability=0' },
+  { name: 'Child 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie&top=shortFlat&facialHairProbability=0' },
 
   // Seniors
-  { name: 'Senior 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&top=curly&hairColor=silverGray&facialHairProbability=0' },
-  { name: 'Senior 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=George&top=sides&hairColor=white&facialHair=beardLight&facialHairProbability=100' }
+  { name: 'Senior 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&top=curly&hairColor=e8e1e1&facialHairProbability=0' },
+  { name: 'Senior 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=George&top=sides&hairColor=ffffff&facialHair=beardLight&facialHairProbability=100' }
 ];
 
 const DashboardEditor = ({
@@ -258,7 +259,7 @@ const DashboardEditor = ({
               {/* Profile Image View */}
               <div className="relative group shrink-0">
                 <img
-                  src={profileData.avatar || defaultAvatar}
+                  src={getAvatarUrl(profileData.avatar)}
                   alt="Avatar"
                   className="w-24 h-24 rounded-full object-cover border border-slate-200"
                 />
@@ -325,7 +326,7 @@ const DashboardEditor = ({
                       }`}
                       title={preset.name}
                     >
-                      <img src={preset.url} alt={preset.name} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
+                      <img src={getAvatarUrl(preset.url)} alt={preset.name} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
                     </button>
                   );
                 })}

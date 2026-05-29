@@ -149,14 +149,6 @@ const Signup = () => {
                   required
                 />
               </div>
-              {usernameStatus.message && (
-                <p className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
-                  usernameStatus.available ? 'text-emerald-300' : usernameStatus.checking ? 'text-slate-300' : 'text-rose-300'
-                }`}>
-                  {usernameStatus.checking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : usernameStatus.available ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                  {usernameStatus.message}
-                </p>
-              )}
             </div>
 
             {/* Username Field */}
@@ -177,6 +169,14 @@ const Signup = () => {
                   required
                 />
               </div>
+              {usernameStatus.message && (
+                <p className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
+                  usernameStatus.available ? 'text-emerald-300' : usernameStatus.checking ? 'text-slate-300' : 'text-rose-300'
+                }`}>
+                  {usernameStatus.checking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : usernameStatus.available ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
+                  {usernameStatus.message}
+                </p>
+              )}
             </div>
 
             {/* Email Field */}

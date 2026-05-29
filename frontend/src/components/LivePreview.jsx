@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import SiteLogo from './SiteLogo';
-import defaultAvatar from '../assets/default-avatar.jpg';
+import { getAvatarUrl } from '../utils/avatarMapper';
 
 const LivePreview = ({ profileData, links }) => {
   const { name, bio, avatar, accentColor, selectedTheme } = profileData;
@@ -68,7 +68,7 @@ const LivePreview = ({ profileData, links }) => {
             {/* Avatar Section */}
             <div className="relative mt-2 mb-3">
               <img
-                src={avatar || defaultAvatar}
+                src={getAvatarUrl(avatar)}
                 alt={name || 'Avatar'}
                 className="w-18 h-18 rounded-full object-cover border-2 border-white shadow-md"
                 style={{ borderColor: accentColor }}

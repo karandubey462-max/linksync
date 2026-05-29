@@ -4,7 +4,7 @@ import API from '../services/api';
 import { ExternalLink, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SiteLogo from '../components/SiteLogo';
-import defaultAvatar from '../assets/default-avatar.jpg';
+import { getAvatarUrl } from '../utils/avatarMapper';
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -142,7 +142,7 @@ const PublicProfile = () => {
           className="relative mb-4"
         >
           <img
-            src={profile.avatar || defaultAvatar}
+            src={getAvatarUrl(profile.avatar)}
             alt={profile.name}
             className="w-24 h-24 rounded-full object-cover border-4 shadow-lg"
             style={{ borderColor: profile.accentColor }}
