@@ -6,7 +6,7 @@ import defaultAvatar from '../assets/default-avatar.jpg';
 import { getAvatarUrl } from '../utils/avatarMapper';
 
 const defaultAvatars = [
-  { name: 'Suit Woman', url: 'avatar2' }
+  { name: 'Woman', url: 'avatar2' }
 ];
 
 const DashboardEditor = ({
@@ -281,10 +281,10 @@ const DashboardEditor = ({
                 Or Select a Profile Avatar Preset
               </label>
               <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
-                {/* Local Default Avatar */}
+                 {/* Local Default Avatar */}
                 <button
                   type="button"
-                  onClick={() => onProfileChange('avatar', defaultAvatarUrl)}
+                  onClick={() => onProfileChange('avatar', '')}
                   className={`relative flex flex-col items-center justify-center rounded-2xl border p-2 text-center transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
                     isDefaultAvatarSelected 
                       ? 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/10' 
@@ -304,14 +304,15 @@ const DashboardEditor = ({
                       key={index}
                       type="button"
                       onClick={() => onProfileChange('avatar', preset.url)}
-                      className={`relative flex items-center justify-center rounded-2xl border p-2.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
+                      className={`relative flex flex-col items-center justify-center rounded-2xl border p-2 text-center transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${
                         isSelected 
                           ? 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/10' 
                           : isDark ? 'border-slate-800 bg-slate-900/50 hover:border-slate-600' : 'border-slate-200 bg-white hover:border-slate-300'
                       }`}
                       title={preset.name}
                     >
-                      <img src={getAvatarUrl(preset.url)} alt={preset.name} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
+                      <img src={getAvatarUrl(preset.url)} alt={preset.name} className="h-10 w-10 rounded-full object-cover" />
+                      <span className={`block text-[10px] font-bold mt-1.5 leading-tight ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{preset.name}</span>
                     </button>
                   );
                 })}
