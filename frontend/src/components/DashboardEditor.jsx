@@ -6,23 +6,7 @@ import defaultAvatar from '../assets/default-avatar.jpg';
 import { getAvatarUrl } from '../utils/avatarMapper';
 
 const defaultAvatars = [
-  // Women
-  { name: 'Woman 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&top=bigHair&facialHairProbability=0' },
-  { name: 'Woman 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka&top=bun&facialHairProbability=0' },
-  { name: 'Woman 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sara&top=hijab&facialHairProbability=0' },
-
-  // Men
-  { name: 'Man 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&top=shortRound&facialHair=beardLight&facialHairProbability=100' },
-  { name: 'Man 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&top=shortWaved&facialHair=moustacheFancy&facialHairProbability=100' },
-  { name: 'Man 3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&top=theCaesar&facialHair=beardMajestic&facialHairProbability=100' },
-
-  // Children
-  { name: 'Child 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lilou&top=bob&facialHairProbability=0' },
-  { name: 'Child 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie&top=shortFlat&facialHairProbability=0' },
-
-  // Seniors
-  { name: 'Senior 1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&top=curly&hairColor=e8e1e1&facialHairProbability=0' },
-  { name: 'Senior 2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=George&top=sides&hairColor=ffffff&facialHair=beardLight&facialHairProbability=100' }
+  { name: 'Suit Woman', url: 'avatar2' }
 ];
 
 const DashboardEditor = ({
