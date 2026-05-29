@@ -146,12 +146,13 @@
   color: #38bdf8; /* Cyan default text */
   border: 1.5px solid #d946ef; /* Magenta default border */
   box-shadow: 0 0 8px rgba(217, 70, 239, 0.1);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .theme-neon .profile-button:hover {
   color: #ffffff;
   background: #d946ef;
   border-color: #38bdf8;
-  box-shadow: 0 0 20px rgba(217, 70, 239, 0.6), 0 0 40px rgba(56, 189, 248, 0.2);
-  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 25px rgba(217, 70, 239, 0.75), 0 0 45px rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px) scale(1.015);
 }
+

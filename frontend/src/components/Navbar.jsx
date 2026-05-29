@@ -96,11 +96,11 @@ const Navbar = ({ isDark = false, onToggleTheme }) => {
     <header className={`sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors ${isDark ? 'border-slate-800 bg-slate-950/85' : 'border-slate-200/80 bg-white/80'}`}>
       <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand logo */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-pink-500 shadow-md shadow-indigo-500/10">
+        <div className="flex items-center gap-2 cursor-pointer group transition-transform duration-300 hover:scale-[1.015]" onClick={() => navigate('/dashboard')}>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-pink-500 shadow-md shadow-indigo-500/10 transition-transform duration-300 group-hover:rotate-12">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className={`font-display text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-transparent'}`}>
+          <span className={`font-display text-xl font-bold tracking-tight transition-colors duration-300 group-hover:text-indigo-500 ${isDark ? 'text-white' : 'bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-transparent'}`}>
             LinkSync
           </span>
         </div>

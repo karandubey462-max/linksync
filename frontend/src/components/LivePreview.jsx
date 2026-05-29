@@ -92,7 +92,7 @@ const LivePreview = ({ profileData, links }) => {
                     key={link._id || link.id || `${link.title}-${link.url}-${index}`}
                     onClick={() => openPreviewLink(link.url)}
                     style={getButtonStyle(selectedTheme)}
-                    className="profile-button w-full py-2.5 px-3 rounded-xl text-[12px] font-semibold cursor-pointer transition-all border flex items-center gap-2 text-left"
+                    className="profile-button w-full py-2.5 px-3 rounded-xl text-[12px] font-semibold cursor-pointer transition-all duration-200 border flex items-center gap-2 text-left hover:scale-[1.015] hover:-translate-y-0.5"
                   >
                     <SiteLogo url={link.url} size="sm" />
                     <span className="min-w-0 flex-1 truncate">{link.title || 'Untitled Link'}</span>
